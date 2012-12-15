@@ -18,63 +18,53 @@ package com.gentlyweb.utils;
 import java.io.PrintWriter;
 import java.io.IOException;
 
-public class ChainException extends Exception
-{
+public class ChainException extends Exception {
 
-    private Throwable exp = null;
+	private Throwable exp = null;
 
-    public ChainException (String message)
-    {
+	public ChainException(String message) {
 
-	super (message);
-
-    }
-
-    public ChainException (String    message,
-		           Throwable exp)
-    {
-
-	super (message,
-	       exp);
-
-	this.exp = exp;
-
-    }
-
-    public Throwable getException ()
-    {
-
-	return this.exp;
-
-    }
-
-    public void printInnerExceptionChain (PrintWriter out)
-	                                  throws      IOException
-    {
-
-	// Print out the inner exceptions if they exist...
-	if (this.exp != null)
-	{
-
-	    out.println ("Next exception in chain:");
-	    exp.printStackTrace (out);
-	    out.println ();
-
-	    if (exp instanceof ChainException) 
-	    {
-
-		ChainException ee = (ChainException) exp;
-
-		ee.printInnerExceptionChain (out);
-
-	    } else {
-
-		exp.printStackTrace (out);
-
-	    }
+		super(message);
 
 	}
 
-    }
+	public ChainException(String message, Throwable exp) {
+
+		super(message, exp);
+
+		this.exp = exp;
+
+	}
+
+	public Throwable getException() {
+
+		return this.exp;
+
+	}
+
+	public void printInnerExceptionChain(PrintWriter out) throws IOException {
+
+		// Print out the inner exceptions if they exist...
+		if (this.exp != null) {
+
+			out.println("Next exception in chain:");
+			exp.printStackTrace(out);
+			out.println();
+
+			if (exp instanceof ChainException) {
+
+				ChainException ee = (ChainException) exp;
+
+				ee.printInnerExceptionChain(out);
+
+			} else {
+
+				exp.printStackTrace(out);
+
+			}
+
+		}
+
+	}
 
 }

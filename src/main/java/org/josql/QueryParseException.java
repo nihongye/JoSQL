@@ -15,26 +15,21 @@
 package org.josql;
 
 /**
- * The exception that is thrown during the <b>parse</b> and <b>init</b>
- * parts of the Query execution.
+ * The exception that is thrown during the <b>parse</b> and <b>init</b> parts of
+ * the Query execution.
  */
-public class QueryParseException extends Exception 
-{
+public class QueryParseException extends Exception {
 
-    public QueryParseException (String    message,
-				Throwable cause)
-    {
+	public QueryParseException(String message, Throwable cause) {
 
-	super (message,
-	       cause);
+		super(message, cause);
 
-    }
+	}
 
-    public QueryParseException (String message)
-    {
+	public QueryParseException(String message) {
 
-	super (message);
+		super(message);
 
-    }
+	}
 
 }

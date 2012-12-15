@@ -12,9 +12,9 @@ public class FooFunction {
 				nameMethod = obj.getClass().getMethod("getName");
 				ageMethod = obj.getClass().getMethod("getAge");
 			}
-			if("name".equals(name)){
+			if ("name".equals(name)) {
 				return nameMethod.invoke(obj);
-			}else if("age".equals(name)){
+			} else if ("age".equals(name)) {
 				return ageMethod.invoke(obj);
 			}
 			return null;

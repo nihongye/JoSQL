@@ -17,26 +17,24 @@ package org.josql.functions;
 import org.josql.Query;
 
 /**
- * Defines a basic function handler.
- * A function handler object does NOT have to extend this class, this is here purely
- * as an easy way to have the required {@link Query} object be available for 
- * sub-classes.
+ * Defines a basic function handler. A function handler object does NOT have to
+ * extend this class, this is here purely as an easy way to have the required
+ * {@link Query} object be available for sub-classes.
  */
-public abstract class AbstractFunctionHandler implements FunctionHandler
-{
+public abstract class AbstractFunctionHandler implements FunctionHandler {
 
-    protected Query q = null;
+	protected Query q = null;
 
-    /**
-     * Set the Query object that the function handler should use.
-     *
-     * @param q The Query object.
-     */
-    public void setQuery (Query q)
-    {
+	/**
+	 * Set the Query object that the function handler should use.
+	 * 
+	 * @param q
+	 *            The Query object.
+	 */
+	public void setQuery(Query q) {
 
-	this.q = q;
+		this.q = q;
 
-    }
+	}
 
 }

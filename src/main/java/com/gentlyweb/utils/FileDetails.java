@@ -18,127 +18,111 @@ package com.gentlyweb.utils;
 import java.io.File;
 import java.io.IOException;
 
-public class FileDetails
-{
-    
-    private boolean exists = false;
-    private boolean readable = false;
-    private boolean writeable = false;
-    private long length = 0;
-    private boolean hidden = false;
-    private boolean file = false;
-    private long lastModified = 0;
-    private String name = null;
-    private String path = null;
-    private File f = null;
-    
-    public FileDetails (File   file)
-    {
-	
-	if (file.exists ())
-	{
-	    
-	    this.exists = true;
-	    
-	    this.length = file.length ();
-	    this.lastModified = file.lastModified ();
-	    
-	    this.name = file.getName ();
-	    this.path = file.getPath ();
-	    
-	    if (file.isFile ())
-	    {
-		
-		this.file = true;
-		
-	    }
-	    
-	    if (file.isHidden ())
-	    {
-		
-		this.hidden = true;
-		
-	    }
-	    
-	    if (file.canWrite ())
-	    {
-		
-		this.writeable = true;
-		
-	    }
-	    
-	    if (file.canRead ())
-	    {
-		
-		this.readable = true;
-		
-	    }
-	    
+public class FileDetails {
+
+	private boolean exists = false;
+	private boolean readable = false;
+	private boolean writeable = false;
+	private long length = 0;
+	private boolean hidden = false;
+	private boolean file = false;
+	private long lastModified = 0;
+	private String name = null;
+	private String path = null;
+	private File f = null;
+
+	public FileDetails(File file) {
+
+		if (file.exists()) {
+
+			this.exists = true;
+
+			this.length = file.length();
+			this.lastModified = file.lastModified();
+
+			this.name = file.getName();
+			this.path = file.getPath();
+
+			if (file.isFile()) {
+
+				this.file = true;
+
+			}
+
+			if (file.isHidden()) {
+
+				this.hidden = true;
+
+			}
+
+			if (file.canWrite()) {
+
+				this.writeable = true;
+
+			}
+
+			if (file.canRead()) {
+
+				this.readable = true;
+
+			}
+
+		}
+
 	}
-	
-    }
 
-    public File getFile ()
-    {
+	public File getFile() {
 
-	return this.f;
+		return this.f;
 
-    }
+	}
 
-    public boolean isDirectory ()
-    {
+	public boolean isDirectory() {
 
-	return !this.file;
+		return !this.file;
 
-    }
+	}
 
-    public boolean isFile ()
-    {
+	public boolean isFile() {
 
-	return this.file;
+		return this.file;
 
-    }
+	}
 
-    public boolean canWrite ()
-    {
+	public boolean canWrite() {
 
-	return this.writeable;	
+		return this.writeable;
 
-    }
+	}
 
-    public boolean canRead ()
-    {
+	public boolean canRead() {
 
-	return this.readable;
+		return this.readable;
 
-    }
+	}
 
-    public long getLength ()
-    {
+	public long getLength() {
 
-	return this.length;
+		return this.length;
 
-    }
+	}
 
-    public boolean isHidden ()
-    {
+	public boolean isHidden() {
 
-	return this.hidden;
+		return this.hidden;
 
-    }
+	}
 
-    public long lastModified ()
-    {
+	public long lastModified() {
 
-	return this.lastModified;
+		return this.lastModified;
 
-    }
+	}
 
-    public boolean exists ()
-    {
+	public boolean exists() {
 
-	return this.exists;
+		return this.exists;
 
-    }
-    
+	}
+
 }

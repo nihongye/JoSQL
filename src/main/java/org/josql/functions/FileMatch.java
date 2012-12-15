@@ -18,71 +18,60 @@ import java.io.File;
 
 /**
  * This class represents the match of a String in a file.
- */ 
-public class FileMatch
-{
+ */
+public class FileMatch {
 
-    private File f = null;
-    private int line = 0;
-    private int col = 0;
-    private String str = null;
-    private String oLine = null;
+	private File f = null;
+	private int line = 0;
+	private int col = 0;
+	private String str = null;
+	private String oLine = null;
 
-    public FileMatch (File   f,
-		      int    line,
-		      int    col,
-		      String str,
-		      String oLine)
-    {
+	public FileMatch(File f, int line, int col, String str, String oLine) {
 
-	this.f = f;
-	this.line = line;
-	this.col = col;
-	this.str = str;
-	this.oLine = oLine;
+		this.f = f;
+		this.line = line;
+		this.col = col;
+		this.str = str;
+		this.oLine = oLine;
 
-    }
+	}
 
-    public String toString ()
-    {
+	public String toString() {
 
-	return this.f.getPath () + "[" + this.line + "," + this.col + "] \"" + this.str + "\" " + this.oLine;
+		return this.f.getPath() + "[" + this.line + "," + this.col + "] \""
+		        + this.str + "\" " + this.oLine;
 
-    }
+	}
 
-    public String getOriginalLine ()
-    {
+	public String getOriginalLine() {
 
-	return this.oLine;
+		return this.oLine;
 
-    }
+	}
 
-    public String getString ()
-    {
+	public String getString() {
 
-	return this.str;
+		return this.str;
 
-    }
+	}
 
-    public int getColumn ()
-    {
+	public int getColumn() {
 
-	return this.col;
+		return this.col;
 
-    }
+	}
 
-    public int getLine ()
-    {
+	public int getLine() {
 
-	return this.line;
+		return this.line;
 
-    }
+	}
 
-    public File getFile ()
-    {
+	public File getFile() {
 
-	return this.f;
+		return this.f;
 
-    }
+	}
 
 }

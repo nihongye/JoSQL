@@ -23,186 +23,162 @@ import org.josql.Query;
 import org.josql.QueryParseException;
 import org.josql.QueryExecutionException;
 
-public class Limit
-{
+public class Limit {
 
-    private ValueExpression start = null;
-    private ValueExpression rowsCount = null;
+	private ValueExpression start = null;
+	private ValueExpression rowsCount = null;
 
-    public Limit ()
-    {
-
-    }
-
-    public void init (Query  q)
-	              throws QueryParseException
-    {
-
-	// Init the value expressions...
-	if (this.start != null)
-	{
-
-	    this.start.init (q);
-
-	    // Should probably check to ensure that accessors aren't used... since
-	    // we don't have a "current object" to work on!.
-	    Class c = this.start.getExpectedReturnType (q);
-
-	    if (!Utilities.isNumber (c))
-	    {
-
-		throw new QueryParseException ("The expected return type of the start expression: \"" +
-					       this.start +
-					       "\" of the LIMIT clause is: " +
-					       c.getName () + 
-					       " however the expression when evaluated must return a numeric result.");
-
-	    }
+	public Limit() {
 
 	}
 
-	this.rowsCount.init (q);
+	public void init(Query q) throws QueryParseException {
 
-	// Should probably check to ensure that accessors aren't used... since
-	// we don't have a "current object" to work on!.
+		// Init the value expressions...
+		if (this.start != null) {
 
-	// Try and determine what the expected type is that we will return.
-	Class c = this.rowsCount.getExpectedReturnType (q);
+			this.start.init(q);
 
-	if (!Utilities.isNumber (c))
-	{
+			// Should probably check to ensure that accessors aren't used...
+			// since
+			// we don't have a "current object" to work on!.
+			Class c = this.start.getExpectedReturnType(q);
 
-	    throw new QueryParseException ("The expected return type of the rows count expression: \"" +
-					   this.rowsCount +
-					   "\" of the LIMIT clause is: " +
-					   c.getName () + 
-					   " however the expression when evaluated must return a numeric result.");
+			if (!Utilities.isNumber(c)) {
 
-	}
+				throw new QueryParseException(
+				        "The expected return type of the start expression: \""
+				                + this.start
+				                + "\" of the LIMIT clause is: "
+				                + c.getName()
+				                + " however the expression when evaluated must return a numeric result.");
 
-    }
+			}
 
-    public List getSubList (List   objs,
-			    Query  q)
-	                    throws QueryExecutionException
-    {
+		}
 
-	// Get the row count.
-	Object o = this.rowsCount.evaluate (null,
-					    q);
+		this.rowsCount.init(q);
 
-	int rows = -1;
+		// Should probably check to ensure that accessors aren't used... since
+		// we don't have a "current object" to work on!.
 
-	// Ensure that it is a number.
-	if ((o != null)
-	    &&
-	    (!(o instanceof Number))
-	   )
-	{
+		// Try and determine what the expected type is that we will return.
+		Class c = this.rowsCount.getExpectedReturnType(q);
 
-	    throw new QueryExecutionException ("Return value of rows count expression: \"" +
-					       this.rowsCount +
-					       "\" for the LIMIT clause is of type: " +
-					       o.getClass ().getName () + 
-					       " expected it to return a numeric value.");
+		if (!Utilities.isNumber(c)) {
 
-	}
+			throw new QueryParseException(
+			        "The expected return type of the rows count expression: \""
+			                + this.rowsCount
+			                + "\" of the LIMIT clause is: "
+			                + c.getName()
+			                + " however the expression when evaluated must return a numeric result.");
 
-	if (o != null)
-	{
-
-	    // There are rounding issues here, but if the user provides a float/double value...
-	    rows = ((Number) o).intValue ();
+		}
 
 	}
 
-	int start = 0;
+	public List getSubList(List objs, Query q) throws QueryExecutionException {
 
-	// Now get the start value...
-	if (this.start != null)
-	{
+		// Get the row count.
+		Object o = this.rowsCount.evaluate(null, q);
 
-	    Object s = this.start.evaluate (null,
-					    q);
+		int rows = -1;
 
-	    // Ensure that it is a number.
-	    if ((s != null)
-		&&
-		(!(s instanceof Number))
-	       )
-	    {
+		// Ensure that it is a number.
+		if ((o != null) && (!(o instanceof Number))) {
 
-		throw new QueryExecutionException ("Return value of the start expression: \"" +
-						   this.start +
-						   "\" for the LIMIT clause is of type: " +
-						   s.getClass ().getName () + 
-						   " expected it to return a numeric value.");
+			throw new QueryExecutionException(
+			        "Return value of rows count expression: \""
+			                + this.rowsCount
+			                + "\" for the LIMIT clause is of type: "
+			                + o.getClass().getName()
+			                + " expected it to return a numeric value.");
 
-	    }
+		}
 
-	    if (s != null)
-	    {
+		if (o != null) {
 
-		// There are rounding issues here, but if the user provides a float/double value...
-		start = ((Number) s).intValue ();
+			// There are rounding issues here, but if the user provides a
+			// float/double value...
+			rows = ((Number) o).intValue();
 
-		// Whilst for the user rows start at 1, for us they start at 0...
-		start--;
+		}
 
-	    }
+		int start = 0;
+
+		// Now get the start value...
+		if (this.start != null) {
+
+			Object s = this.start.evaluate(null, q);
+
+			// Ensure that it is a number.
+			if ((s != null) && (!(s instanceof Number))) {
+
+				throw new QueryExecutionException(
+				        "Return value of the start expression: \"" + this.start
+				                + "\" for the LIMIT clause is of type: "
+				                + s.getClass().getName()
+				                + " expected it to return a numeric value.");
+
+			}
+
+			if (s != null) {
+
+				// There are rounding issues here, but if the user provides a
+				// float/double value...
+				start = ((Number) s).intValue();
+
+				// Whilst for the user rows start at 1, for us they start at
+				// 0...
+				start--;
+
+			}
+
+		}
+
+		int ls = objs.size();
+
+		// Now get our sub-list.
+		if (start > (ls - 1)) {
+
+			// Return nothing, outside of the range.
+			return new ArrayList();
+
+		}
+
+		if (rows > 0) {
+
+			if ((start + rows) > (ls - 1)) {
+
+				// Just return the rows starting at start...
+				// We return a new list to prevent issues with modifications...
+				return new ArrayList(objs.subList(start, ls));
+
+			}
+
+			// Here we return start + rows.
+			return new ArrayList(objs.subList(start, start + rows));
+
+		} else {
+
+			// Just ignore the rows...
+			return new ArrayList(objs.subList(start, ls));
+
+		}
 
 	}
 
-	int ls = objs.size ();
+	public void setStart(ValueExpression v) {
 
-	// Now get our sub-list.
-	if (start > (ls - 1))
-	{
-
-	    // Return nothing, outside of the range.
-	    return new ArrayList ();
+		this.start = v;
 
 	}
 
-	if (rows > 0)
-	{
+	public void setRowsCount(ValueExpression v) {
 
-	    if ((start + rows) > (ls - 1))
-	    {
-
-		    // Just return the rows starting at start...
-		    // We return a new list to prevent issues with modifications...
-		    return new ArrayList (objs.subList (start,
-							ls));
-
-	    }
-
-	    // Here we return start + rows.
-	    return new ArrayList (objs.subList (start,
-						start + rows));
-
-	} else {
-
-	    // Just ignore the rows...
-	    return new ArrayList (objs.subList (start,
-						ls));
+		this.rowsCount = v;
 
 	}
-
-    }
-
-    public void setStart (ValueExpression v)
-    {
-
-	this.start = v;
-
-    }
-
-    public void setRowsCount (ValueExpression v)
-    {
-
-	this.rowsCount = v;
-
-    }
 
 }

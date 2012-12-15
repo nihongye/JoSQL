@@ -27,403 +27,337 @@ import org.josql.QueryParseException;
 
 import org.josql.expressions.Expression;
 
-public class FilteredArrayList extends ArrayList
-{
+public class FilteredArrayList extends ArrayList {
 
-    private Expression where = null;
-    private Comparator orderByComp = null;
-    private Query q = null;
-    private Exception ex = null;
-    private boolean noThrow = false;
+	private Expression where = null;
+	private Comparator orderByComp = null;
+	private Query q = null;
+	private Exception ex = null;
+	private boolean noThrow = false;
 
-    public FilteredArrayList (String q)
-	                      throws QueryParseException
-    {
+	public FilteredArrayList(String q) throws QueryParseException {
 
-	this (q,
-	      10);
-
-    }
-
-    public FilteredArrayList (String q,
-			      int    cap)
-	                      throws QueryParseException
-    {
-
-	super (cap);
-
-	this.q = new Query ();
-	this.q.parse (q);
-	this.where = this.q.getWhereClause ();
-
-    }
-
-    public FilteredArrayList (String     q,
-			      Collection c)
-	                      throws     QueryParseException
-    {
-
-	this (q);
-
-	this.addAll (c);
-
-    }
-
-    public FilteredArrayList (Query q)
-    {
-
-	this.q = q;
-
-    }
-
-    public FilteredArrayList (Query      q,
-			      Collection c)
-    {
-
-	this (q);
-
-	this.addAll (c);
-
-    }
-
-    public boolean isNoThrowOnWhereFalse ()
-    {
-
-	return this.noThrow;
-
-    }
-
-    public void setNoThrowOnWhereFalse (boolean v)
-    {
-
-	this.noThrow = v;
-
-    }
-
-    public Exception getException ()
-    {
-
-	return this.ex;
-
-    }
-
-    public Query getQuery ()
-    {
-
-	return this.q;
-
-    }
-
-    public void resort ()
-    {
-
-	if (this.orderByComp == null)
-	{
-
-	    this.orderByComp = this.q.getOrderByComparator ();
+		this(q, 10);
 
 	}
 
-	if (this.orderByComp != null)
-	{
+	public FilteredArrayList(String q, int cap) throws QueryParseException {
 
-	    Collections.sort (this,
-			      this.orderByComp);
+		super(cap);
 
-	    return;
-
-	}
-
-	Collections.sort (this);
-
-    }
-
-    private boolean check (Object o)
-	                   throws IllegalArgumentException
-    {
-
-	this.ex = null;
-
-	if (this.where == null)
-	{
-
-	    return true;
+		this.q = new Query();
+		this.q.parse(q);
+		this.where = this.q.getWhereClause();
 
 	}
 
-	try
-	{
+	public FilteredArrayList(String q, Collection c) throws QueryParseException {
 
-	    if (!this.where.isTrue (o,
-				    this.q))
-	    {
+		this(q);
 
-		if (!this.noThrow)
-		{
+		this.addAll(c);
 
-		    throw new IllegalArgumentException ("Where clause: " +
-							this.where +
-							" evaluates to false for object cannot be added");
-		
+	}
+
+	public FilteredArrayList(Query q) {
+
+		this.q = q;
+
+	}
+
+	public FilteredArrayList(Query q, Collection c) {
+
+		this(q);
+
+		this.addAll(c);
+
+	}
+
+	public boolean isNoThrowOnWhereFalse() {
+
+		return this.noThrow;
+
+	}
+
+	public void setNoThrowOnWhereFalse(boolean v) {
+
+		this.noThrow = v;
+
+	}
+
+	public Exception getException() {
+
+		return this.ex;
+
+	}
+
+	public Query getQuery() {
+
+		return this.q;
+
+	}
+
+	public void resort() {
+
+		if (this.orderByComp == null) {
+
+			this.orderByComp = this.q.getOrderByComparator();
+
 		}
 
-		return false;
+		if (this.orderByComp != null) {
 
-	    }
+			Collections.sort(this, this.orderByComp);
 
-	    return true;
+			return;
 
-	} catch (QueryExecutionException e) {
+		}
 
-	    this.ex = e;
-
-	    throw new IllegalArgumentException ("Where clause: " +
-						this.where +
-						" throws exception during execution, use: getException for details.");
+		Collections.sort(this);
 
 	}
 
-    }
+	private boolean check(Object o) throws IllegalArgumentException {
 
-    public boolean addAll (Collection c)
-	                   throws     IllegalArgumentException
-    {
+		this.ex = null;
 
-	int s = this.size () - 1;
+		if (this.where == null) {
 
-	if (s < 0)
-	{
+			return true;
 
-	    s = 0;
+		}
 
-	}
+		try {
 
-	return this.addAll (s,
-			    c);
+			if (!this.where.isTrue(o, this.q)) {
 
-    }
+				if (!this.noThrow) {
 
-    public boolean addAll (int        index,
-			   Collection c)
-	                   throws     IllegalArgumentException
-    {
+					throw new IllegalArgumentException("Where clause: "
+					        + this.where
+					        + " evaluates to false for object cannot be added");
 
-	this.ex = null;
+				}
 
-	if (c == null)
-	{
-
-	    throw new NullPointerException ("Expected collection to be non-null.");
-
-	}
-
-	boolean change = false;
-
-	int st = index;
-
-	if (c instanceof List)
-	{
-
-	    List l = (List) c;
-
-	    int s = l.size (); 
-
-	    for (int i = 0; i < s; i++)
-	    {
-
-		Object o = l.get (i);
-
-		try
-		{
-
-		    if (this.where.isTrue (o,
-					   this.q))
-		    {
-
-			super.add (st,
-				   o);
-
-			st++;
-			change = true;
-
-		    } else {
-
-			if (!this.noThrow)
-			{
-
-			    throw new IllegalArgumentException ("Where clause: " +
-								this.where +
-								" evaluates to false for object cannot be added");
+				return false;
 
 			}
 
-		    }
+			return true;
 
 		} catch (QueryExecutionException e) {
-		    
-		    this.ex = e;
-		    
-		    throw new IllegalArgumentException ("Where clause: " +
-							this.where +
-							" throws exception during execution, use: getException for details.");
+
+			this.ex = e;
+
+			throw new IllegalArgumentException(
+			        "Where clause: "
+			                + this.where
+			                + " throws exception during execution, use: getException for details.");
 
 		}
 
-	    }
+	}
 
-	} else {
+	public boolean addAll(Collection c) throws IllegalArgumentException {
 
-	    Iterator iter = c.iterator ();
+		int s = this.size() - 1;
 
-	    while (iter.hasNext ())
-	    {
+		if (s < 0) {
 
-		Object o = iter.next ();
+			s = 0;
 
-		try
-		{
+		}
 
-		    if (this.where.isTrue (o,
-					   this.q))
-		    {
+		return this.addAll(s, c);
 
-			super.add (st,
-				   o);
+	}
 
-			st++;
-			change = true;
+	public boolean addAll(int index, Collection c)
+	        throws IllegalArgumentException {
 
-		    } else {
+		this.ex = null;
 
-			if (!this.noThrow)
-			{
+		if (c == null) {
 
-			    throw new IllegalArgumentException ("Where clause: " +
-								this.where +
-								" evaluates to false for object cannot be added");
+			throw new NullPointerException(
+			        "Expected collection to be non-null.");
+
+		}
+
+		boolean change = false;
+
+		int st = index;
+
+		if (c instanceof List) {
+
+			List l = (List) c;
+
+			int s = l.size();
+
+			for (int i = 0; i < s; i++) {
+
+				Object o = l.get(i);
+
+				try {
+
+					if (this.where.isTrue(o, this.q)) {
+
+						super.add(st, o);
+
+						st++;
+						change = true;
+
+					} else {
+
+						if (!this.noThrow) {
+
+							throw new IllegalArgumentException(
+							        "Where clause: "
+							                + this.where
+							                + " evaluates to false for object cannot be added");
+
+						}
+
+					}
+
+				} catch (QueryExecutionException e) {
+
+					this.ex = e;
+
+					throw new IllegalArgumentException(
+					        "Where clause: "
+					                + this.where
+					                + " throws exception during execution, use: getException for details.");
+
+				}
 
 			}
 
-		    }
+		} else {
 
-		} catch (QueryExecutionException e) {
-		    
-		    this.ex = e;
+			Iterator iter = c.iterator();
 
-		    throw new IllegalArgumentException ("Where clause: " +
-							this.where +
-							" throws exception during execution, use: getException for details.");
+			while (iter.hasNext()) {
+
+				Object o = iter.next();
+
+				try {
+
+					if (this.where.isTrue(o, this.q)) {
+
+						super.add(st, o);
+
+						st++;
+						change = true;
+
+					} else {
+
+						if (!this.noThrow) {
+
+							throw new IllegalArgumentException(
+							        "Where clause: "
+							                + this.where
+							                + " evaluates to false for object cannot be added");
+
+						}
+
+					}
+
+				} catch (QueryExecutionException e) {
+
+					this.ex = e;
+
+					throw new IllegalArgumentException(
+					        "Where clause: "
+					                + this.where
+					                + " throws exception during execution, use: getException for details.");
+
+				}
+
+			}
 
 		}
 
-	    }
+		return change;
 
 	}
 
-	return change;
+	public void add(int index, Object o) throws IllegalArgumentException {
 
-    }
+		if (!this.check(o)) {
 
-    public void add (int    index,
-		     Object o)
-	             throws IllegalArgumentException
-    {
+			return;
 
-	if (!this.check (o))
-	{
+		}
 
-	    return;
+		super.add(index, o);
 
 	}
 
-	super.add (index,
-		   o);
+	public Object set(int index, Object o) throws IllegalArgumentException {
 
-    }
+		Object oo = this.get(index);
 
-    public Object set (int    index,
-		       Object o)
-	               throws IllegalArgumentException
-    {
+		if (!this.check(o)) {
 
-	Object oo = this.get (index);
+			return oo;
 
-	if (!this.check (o))
-	{
+		}
 
-	    return oo;
+		super.set(index, o);
+
+		return oo;
 
 	}
 
-	super.set (index,
-		   o);
+	public boolean add(Object o) throws IllegalArgumentException {
 
-	return oo;
+		if (!this.check(o)) {
 
-    }
+			return false;
 
-    public boolean add (Object o)
-	                throws IllegalArgumentException
-    {
+		}
 
-	if (!this.check (o))
-	{
-
-	    return false;
+		return super.add(o);
 
 	}
 
-	return super.add (o);
+	public boolean canAdd(Object o) throws QueryExecutionException {
 
-    }
+		return this.where.isTrue(o, this.q);
 
-    public boolean canAdd (Object o)
-	                   throws QueryExecutionException
-    {
+	}
 
-	return this.where.isTrue (o,
-				  this.q);
+	public Object clone() {
 
-    }
+		FilteredArrayList l = new FilteredArrayList(this.q, this);
 
-    public Object clone ()
-    {
+		return l;
 
-	FilteredArrayList l = new FilteredArrayList (this.q,
-						     this);
+	}
 
-	return l;
+	public List cloneList(Query q) {
 
-    }
+		return new FilteredArrayList(q, this);
 
-    public List cloneList (Query q)
-    {
+	}
 
-	return new FilteredArrayList (q,
-				      this);
+	public List cloneList() {
 
-    }
+		return new FilteredArrayList(this.q, this);
 
-    public List cloneList ()
-    {
+	}
 
-	return new FilteredArrayList (this.q,
-				      this);
+	public FilteredArrayList cloneSelf() {
 
-    }
+		return (FilteredArrayList) this.cloneList();
 
-    public FilteredArrayList cloneSelf ()
-    {
+	}
 
-	return (FilteredArrayList) this.cloneList ();
+	public FilteredArrayList cloneSelf(Query q) {
 
-    }
+		return (FilteredArrayList) this.cloneList(q);
 
-    public FilteredArrayList cloneSelf (Query q)
-    {
-
-	return (FilteredArrayList) this.cloneList (q);
-
-    }
+	}
 
 }

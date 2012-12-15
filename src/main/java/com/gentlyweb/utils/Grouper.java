@@ -21,132 +21,112 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
 
-public class Grouper
-{
+public class Grouper {
 
-    private List getters = new ArrayList ();
-    private Class c = null;
+	private List getters = new ArrayList();
+	private Class c = null;
 
-    public Grouper (Class c)
-    {
+	public Grouper(Class c) {
 
-	this.c = c;
-
-    }
-
-    public void addGroupBy (Getter get)
-	                    throws IllegalArgumentException
-    {
-
-	// Get the class that the getter relates to, they MUST be the same class AND the
-	// same object... classes loaded via other classloaders are not compatible.
-	if (get.getBaseClass ().hashCode () != this.c.hashCode ())
-	{
-
-	    throw new IllegalArgumentException ("Class in Getter is: " + 
-						get.getBaseClass ().getName () +
-						" with hashCode: " +
-						get.getBaseClass ().hashCode () +
-						" which is incompatible with comparator class: " +
-						this.c.getName () + 
-						" with hashCode: " +
-						this.c.hashCode ());
+		this.c = c;
 
 	}
 
-	this.getters.add (get);
+	public void addGroupBy(Getter get) throws IllegalArgumentException {
 
-    }
+		// Get the class that the getter relates to, they MUST be the same class
+		// AND the
+		// same object... classes loaded via other classloaders are not
+		// compatible.
+		if (get.getBaseClass().hashCode() != this.c.hashCode()) {
 
-    public void addGroupBy (String on)
-    {
-
-	this.getters.add (new Getter (on,
-				      this.c));
-
-    }
-
-    public Map group (List   items)
-	              throws ChainException
-    {
-
-	Map groups = new HashMap ();
-
-	for (int j = 0; j < items.size (); j++)
-	{
-
-	    Object o = items.get (j);
-
-	    boolean match = true;
-
-	    List key = new ArrayList ();
-
-	    for (int i = 0; i < this.getters.size (); i++)
-	    {
-
-		// Ensure that all getters match (equals = true)
-
-		// Get the value.
-		Object val = null;
-
-		try
-		{
-
-		    val = ((Getter) this.getters.get (i)).getValue (o);
-
-		} catch (Exception e) {
-		    
-		    throw new ChainException ("Unable to get value for accessor from class: " +
-					      o.getClass ().getName (),
-					      e);
+			throw new IllegalArgumentException("Class in Getter is: "
+			        + get.getBaseClass().getName() + " with hashCode: "
+			        + get.getBaseClass().hashCode()
+			        + " which is incompatible with comparator class: "
+			        + this.c.getName() + " with hashCode: " + this.c.hashCode());
 
 		}
 
-		key.add (val);
-
-	    }
-
-	    List g = (List) groups.get (key);
-
-	    if (g == null)
-	    {
-
-		g = new ArrayList ();
-
-		groups.put (key,
-			    g);
-
-	    } 
-
-	    g.add (o);
+		this.getters.add(get);
 
 	}
 
-	return groups;
+	public void addGroupBy(String on) {
 
-    }
+		this.getters.add(new Getter(on, this.c));
 
-    public List groupSortByGroupSize (List   items,
-				      String ascDesc)
-                                      throws ChainException
-    {
+	}
 
-	Map m = this.group (items);
+	public Map group(List items) throws ChainException {
 
-	List nSearches = new ArrayList ();
-	CollectionsUtils.addMapEntriesToList (m,
-					      nSearches);
+		Map groups = new HashMap();
 
-	GeneralComparator gc = new GeneralComparator (List.class);
+		for (int j = 0; j < items.size(); j++) {
 
-	gc.addField ("size",
-		     ascDesc);
+			Object o = items.get(j);
 
-	Collections.sort (nSearches,
-			  gc);	
+			boolean match = true;
 
-	return nSearches;
+			List key = new ArrayList();
 
-    }
+			for (int i = 0; i < this.getters.size(); i++) {
+
+				// Ensure that all getters match (equals = true)
+
+				// Get the value.
+				Object val = null;
+
+				try {
+
+					val = ((Getter) this.getters.get(i)).getValue(o);
+
+				} catch (Exception e) {
+
+					throw new ChainException(
+					        "Unable to get value for accessor from class: "
+					                + o.getClass().getName(), e);
+
+				}
+
+				key.add(val);
+
+			}
+
+			List g = (List) groups.get(key);
+
+			if (g == null) {
+
+				g = new ArrayList();
+
+				groups.put(key, g);
+
+			}
+
+			g.add(o);
+
+		}
+
+		return groups;
+
+	}
+
+	public List groupSortByGroupSize(List items, String ascDesc)
+	        throws ChainException {
+
+		Map m = this.group(items);
+
+		List nSearches = new ArrayList();
+		CollectionsUtils.addMapEntriesToList(m, nSearches);
+
+		GeneralComparator gc = new GeneralComparator(List.class);
+
+		gc.addField("size", ascDesc);
+
+		Collections.sort(nSearches, gc);
+
+		return nSearches;
+
+	}
 
 }

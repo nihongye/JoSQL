@@ -106,7 +106,7 @@ public class Query {
 	public static String GRPBY_OBJ_VAR_NAME = "_grpby";
 	public static String GRPBY_OBJ_VAR_NAME_SYNONYM = "_groupby";
 	public static final String INT_BIND_VAR_PREFIX = "^^^";
-	
+
 	/**
 	 * a variable type,use type compare to replace base on name compare
 	 */
@@ -568,8 +568,10 @@ public class Query {
 		return null;
 
 	}
+
 	/**
 	 * get varType for variable
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -586,9 +588,11 @@ public class Query {
 			return OTHER_VAR_TYPE;
 		}
 	}
-	
+
 	/**
-	 * get variable with varType,varType use as a optimize,because Integer compare is much faster than String
+	 * get variable with varType,varType use as a optimize,because Integer
+	 * compare is much faster than String
+	 * 
 	 * @param varType
 	 * @param name
 	 * @return

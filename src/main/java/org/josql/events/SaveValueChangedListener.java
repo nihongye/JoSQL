@@ -1,8 +1,7 @@
 package org.josql.events;
 
-public interface SaveValueChangedListener
-{
+public interface SaveValueChangedListener {
 
-    public void saveValueChanged (SaveValueChangedEvent ev);
+	public void saveValueChanged(SaveValueChangedEvent ev);
 
 }

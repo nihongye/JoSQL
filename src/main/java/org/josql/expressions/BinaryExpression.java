@@ -90,14 +90,16 @@ public abstract class BinaryExpression extends Expression {
 			this.right.init(q);
 
 		}
-		//init expectedValueType
-		if(Object.class.equals(this.left.getExpectedReturnType(q))
-				|| Object.class.equals(this.right.getExpectedReturnType(q))){
+		// init expectedValueType
+		if (Object.class.equals(this.left.getExpectedReturnType(q))
+		        || Object.class.equals(this.right.getExpectedReturnType(q))) {
 			expectedValueType = SimpleUtils.EXPECTED_OBJECT;
-		}else if(Collection.class.isAssignableFrom(this.left.getExpectedReturnType(q))
-				|| Collection.class.isAssignableFrom(this.right.getExpectedReturnType(q))){
+		} else if (Collection.class.isAssignableFrom(this.left
+		        .getExpectedReturnType(q))
+		        || Collection.class.isAssignableFrom(this.right
+		                .getExpectedReturnType(q))) {
 			expectedValueType = SimpleUtils.EXPECTED_COLLECTION;
-		}else {
+		} else {
 			expectedValueType = SimpleUtils.EXPECTED_SPECIAL;
 		}
 	}

@@ -28,497 +28,432 @@ import org.josql.QueryExecutionException;
  * Note: creating new instances of SimpleDateFormat objects are VERY costly over
  * large(ish) numbers of objects therefore a cache of objects is provided.
  */
-public class ConversionFunctions extends AbstractFunctionHandler
-{
+public class ConversionFunctions extends AbstractFunctionHandler {
 
-    public static final String HANDLER_ID = "_internal_conversion";
+	public static final String HANDLER_ID = "_internal_conversion";
 
-    /**
-     * Represents the {@link Calendar#MINUTE} field, is: <b>mi</b>.
-     */
-    public static final String MINUTE = "mi";
+	/**
+	 * Represents the {@link Calendar#MINUTE} field, is: <b>mi</b>.
+	 */
+	public static final String MINUTE = "mi";
 
-    /**
-     * Represents the {@link Calendar#DATE} field, is: <b>d</b>.
-     */
-    public static final String DAY = "d";
+	/**
+	 * Represents the {@link Calendar#DATE} field, is: <b>d</b>.
+	 */
+	public static final String DAY = "d";
 
-    /**
-     * Represents the {@link Calendar#YEAR} field, is: <b>y</b>.
-     */
-    public static final String YEAR = "y";
+	/**
+	 * Represents the {@link Calendar#YEAR} field, is: <b>y</b>.
+	 */
+	public static final String YEAR = "y";
 
-    /**
-     * Represents the {@link Calendar#SECOND} field, is: <b>s</b>.
-     */
-    public static final String SECOND = "s";
+	/**
+	 * Represents the {@link Calendar#SECOND} field, is: <b>s</b>.
+	 */
+	public static final String SECOND = "s";
 
-    /**
-     * Represents the {@link Calendar#HOUR_OF_DAY} field, is: <b>h</b>.
-     */
-    public static final String HOUR = "h";
+	/**
+	 * Represents the {@link Calendar#HOUR_OF_DAY} field, is: <b>h</b>.
+	 */
+	public static final String HOUR = "h";
 
-    /**
-     * Represents the {@link Calendar#MONTH} field, is: <b>m</b>.
-     */
-    public static final String MONTH = "m";
+	/**
+	 * Represents the {@link Calendar#MONTH} field, is: <b>m</b>.
+	 */
+	public static final String MONTH = "m";
 
-    /**
-     * Represents the {@link Calendar#WEEK_OF_YEAR} field, is: <b>w</b>.
-     */
-    public static final String WEEK = "w";
+	/**
+	 * Represents the {@link Calendar#WEEK_OF_YEAR} field, is: <b>w</b>.
+	 */
+	public static final String WEEK = "w";
 
-    public static String DEFAULT_DATE_FORMAT_SPEC = "dd/MMM/yyyy";
-    public static String DEFAULT_DATE_FORMAT_SPEC_2 = "dd-MMM-yyyy";
-    public static String DEFAULT_DATE_FORMAT_SPEC_3 = "dd MMM yyyy";
+	public static String DEFAULT_DATE_FORMAT_SPEC = "dd/MMM/yyyy";
+	public static String DEFAULT_DATE_FORMAT_SPEC_2 = "dd-MMM-yyyy";
+	public static String DEFAULT_DATE_FORMAT_SPEC_3 = "dd MMM yyyy";
 
-    private static Map sdfs = new HashMap ();
-    private static Calendar cal = Calendar.getInstance ();
+	private static Map sdfs = new HashMap();
+	private static Calendar cal = Calendar.getInstance();
 
-    static 
-    {
+	static {
 
-	ConversionFunctions.sdfs.put (ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC,
-				      new SimpleDateFormat (ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC));
-	ConversionFunctions.sdfs.put (ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC_2,
-				      new SimpleDateFormat (ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC_2));
-	ConversionFunctions.sdfs.put (ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC_3,
-				      new SimpleDateFormat (ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC_3));
-
-    }
-
-    /**
-     * This method (function) will return the associated field from a
-     * {@link Calendar} instance.  The <b>type</b> parm should be one of the 
-     * constants from this class.  The default {@link java.util.TimeZone} is used.
-     *
-     * @param d If the type is a long value then it is first converted to a Date.
-     *          Or a {@link Date} should be used.
-     * @param type The type of field to get.
-     * @return The field from {@link Calendar}.
-     * @throws QueryExecutionException If the <b>d</b> parm isn't an instance of 
-     *                                 {@link Long} or {@link Date}.
-     */
-    public int timeField (Object d,
-		          String type)
-	                  throws QueryExecutionException
-    {
-
-	if ((!(d instanceof Date))
-	    &&
-	    (!(d instanceof Long))
-	   )
-	{
-
-	    throw new QueryExecutionException ("Value passed in is of type: " +
-					       d.getClass ().getName () +
-					       " only: " +
-					       Long.class.getName () + 
-					       " or: " +
-					       Date.class.getName () + 
-					       " are supported.");
+		ConversionFunctions.sdfs.put(
+		        ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC,
+		        new SimpleDateFormat(
+		                ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC));
+		ConversionFunctions.sdfs.put(
+		        ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC_2,
+		        new SimpleDateFormat(
+		                ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC_2));
+		ConversionFunctions.sdfs.put(
+		        ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC_3,
+		        new SimpleDateFormat(
+		                ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC_3));
 
 	}
 
-	Date date = null;
+	/**
+	 * This method (function) will return the associated field from a
+	 * {@link Calendar} instance. The <b>type</b> parm should be one of the
+	 * constants from this class. The default {@link java.util.TimeZone} is
+	 * used.
+	 * 
+	 * @param d
+	 *            If the type is a long value then it is first converted to a
+	 *            Date. Or a {@link Date} should be used.
+	 * @param type
+	 *            The type of field to get.
+	 * @return The field from {@link Calendar}.
+	 * @throws QueryExecutionException
+	 *             If the <b>d</b> parm isn't an instance of {@link Long} or
+	 *             {@link Date}.
+	 */
+	public int timeField(Object d, String type) throws QueryExecutionException {
 
-	if (d instanceof Long)
-	{
+		if ((!(d instanceof Date)) && (!(d instanceof Long))) {
 
-	    date = new Date (((Long) d).longValue ());
+			throw new QueryExecutionException("Value passed in is of type: "
+			        + d.getClass().getName() + " only: " + Long.class.getName()
+			        + " or: " + Date.class.getName() + " are supported.");
 
-	}
+		}
 
-	if (d instanceof Date)
-	{
+		Date date = null;
 
-	    date = (Date) d;
+		if (d instanceof Long) {
 
-	}
+			date = new Date(((Long) d).longValue());
 
-	ConversionFunctions.cal.setTime (date);
+		}
 
-	type = type.toLowerCase ();
+		if (d instanceof Date) {
 
-	if (type.equals (ConversionFunctions.SECOND))
-	{
+			date = (Date) d;
 
-	    return ConversionFunctions.cal.get (Calendar.SECOND);
+		}
 
-	}
+		ConversionFunctions.cal.setTime(date);
 
-	if (type.equals (ConversionFunctions.MINUTE))
-	{
+		type = type.toLowerCase();
 
-	    return ConversionFunctions.cal.get (Calendar.MINUTE);
+		if (type.equals(ConversionFunctions.SECOND)) {
 
-	}
+			return ConversionFunctions.cal.get(Calendar.SECOND);
 
-	if (type.equals (ConversionFunctions.HOUR))
-	{
+		}
 
-	    return ConversionFunctions.cal.get (Calendar.HOUR_OF_DAY);
+		if (type.equals(ConversionFunctions.MINUTE)) {
 
-	}
+			return ConversionFunctions.cal.get(Calendar.MINUTE);
 
-	if (type.equals (ConversionFunctions.DAY))
-	{
+		}
 
-	    return ConversionFunctions.cal.get (Calendar.DATE);
+		if (type.equals(ConversionFunctions.HOUR)) {
 
-	}
+			return ConversionFunctions.cal.get(Calendar.HOUR_OF_DAY);
 
-	if (type.equals (ConversionFunctions.WEEK))
-	{
+		}
 
-	    return ConversionFunctions.cal.get (Calendar.WEEK_OF_YEAR);
+		if (type.equals(ConversionFunctions.DAY)) {
 
-	}
+			return ConversionFunctions.cal.get(Calendar.DATE);
 
-	if (type.equals (ConversionFunctions.MONTH))
-	{
+		}
 
-	    return ConversionFunctions.cal.get (Calendar.MONTH);
+		if (type.equals(ConversionFunctions.WEEK)) {
 
-	}
+			return ConversionFunctions.cal.get(Calendar.WEEK_OF_YEAR);
 
-	if (type.equals (ConversionFunctions.YEAR))
-	{
+		}
 
-	    return ConversionFunctions.cal.get (Calendar.YEAR);
+		if (type.equals(ConversionFunctions.MONTH)) {
 
-	}
+			return ConversionFunctions.cal.get(Calendar.MONTH);
 
-	// None of the above...
-	return -1;
+		}
 
-    }
+		if (type.equals(ConversionFunctions.YEAR)) {
 
-    public Date addTime (Date   d,
-			 Double amount,
-			 String type)
-    {
+			return ConversionFunctions.cal.get(Calendar.YEAR);
 
-	int a = amount.intValue ();
+		}
 
-	long v = d.getTime ();
-
-	if (type.equals (ConversionFunctions.SECOND))
-	{
-
-	    v += (a * 1000);
-
-	    return new Date (v);
-
-	}
-
-	if (type.equals (ConversionFunctions.MINUTE))
-	{
-
-	    v += (a * 60000);
-
-	    return new Date (v);
+		// None of the above...
+		return -1;
 
 	}
 
-	if (type.equals (ConversionFunctions.HOUR))
-	{
+	public Date addTime(Date d, Double amount, String type) {
 
-	    v += (a * 3600000);
+		int a = amount.intValue();
 
-	    return new Date (v);
+		long v = d.getTime();
 
-	}
+		if (type.equals(ConversionFunctions.SECOND)) {
 
-	if (type.equals (ConversionFunctions.DAY))
-	{
+			v += (a * 1000);
 
-	    v += (a * 24 * 3600000);
+			return new Date(v);
 
-	    return new Date (v);
+		}
 
-	}
+		if (type.equals(ConversionFunctions.MINUTE)) {
 
-	if (type.equals (ConversionFunctions.WEEK))
-	{
+			v += (a * 60000);
 
-	    v += (a * 7 * 24 * 3600000);
+			return new Date(v);
 
-	    return new Date (v);
+		}
 
-	}
+		if (type.equals(ConversionFunctions.HOUR)) {
 
-	if (type.equals (ConversionFunctions.MONTH))
-	{
+			v += (a * 3600000);
 
-	    // Need something a bit more sophisticated now...
-	    GregorianCalendar gc = new GregorianCalendar ();
-	    gc.setTime (d);
-	    
-	    gc.add (Calendar.MONTH,
-		    a);
+			return new Date(v);
 
-	    return gc.getTime ();
+		}
 
-	}
+		if (type.equals(ConversionFunctions.DAY)) {
 
-	if (type.equals (ConversionFunctions.YEAR))
-	{
+			v += (a * 24 * 3600000);
 
-	    // Need something a bit more sophisticated now...
-	    GregorianCalendar gc = new GregorianCalendar ();
-	    gc.setTime (d);
-	    
-	    gc.add (Calendar.YEAR,
-		    a);
+			return new Date(v);
 
-	    return gc.getTime ();
+		}
 
-	}
+		if (type.equals(ConversionFunctions.WEEK)) {
 
-	// None of the above...
-	return d;
+			v += (a * 7 * 24 * 3600000);
 
-    }
+			return new Date(v);
 
-    public Date toDate (Object value)
-	                throws QueryExecutionException
-    {
+		}
 
-	if (value == null)
-	{
+		if (type.equals(ConversionFunctions.MONTH)) {
 
-	    return null;
+			// Need something a bit more sophisticated now...
+			GregorianCalendar gc = new GregorianCalendar();
+			gc.setTime(d);
 
-	}
+			gc.add(Calendar.MONTH, a);
 
-	if (value instanceof Number)
-	{
+			return gc.getTime();
 
-	    return new Date (((Number) value).longValue ());
+		}
 
-	} 
+		if (type.equals(ConversionFunctions.YEAR)) {
 
-	if (value instanceof String) 
-	{
+			// Need something a bit more sophisticated now...
+			GregorianCalendar gc = new GregorianCalendar();
+			gc.setTime(d);
 
-	    return this.toDate ((String) value,
-				null);
+			gc.add(Calendar.YEAR, a);
 
-	} 
+			return gc.getTime();
 
-	if (value instanceof Date) 
-	{
+		}
 
-	    return (Date) value;
+		// None of the above...
+		return d;
 
 	}
 
-	throw new QueryExecutionException ("Type: " + value.getClass ().getName () + " is not supported.");
+	public Date toDate(Object value) throws QueryExecutionException {
 
-    }
+		if (value == null) {
 
-    public Date to_date (Object value)
-	                 throws QueryExecutionException
-    {
+			return null;
 
-	return this.toDate (value);
+		}
 
-    }
+		if (value instanceof Number) {
 
-    public Date to_date (String value,
-			 String spec)
-	                 throws QueryExecutionException
-    {
+			return new Date(((Number) value).longValue());
 
-	return this.toDate (value,
-			    spec);
+		}
 
-    }
+		if (value instanceof String) {
 
-    public Date toDate (String value,
-			String spec)
-	                throws QueryExecutionException
-    {
+			return this.toDate((String) value, null);
 
-	if (spec == null)
-	{
+		}
 
-	    spec = ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC;
+		if (value instanceof Date) {
+
+			return (Date) value;
+
+		}
+
+		throw new QueryExecutionException("Type: " + value.getClass().getName()
+		        + " is not supported.");
 
 	}
 
-	SimpleDateFormat df = (SimpleDateFormat) ConversionFunctions.sdfs.get (spec);
+	public Date to_date(Object value) throws QueryExecutionException {
 
-	if (df == null)
-	{
-
-	    df = new SimpleDateFormat (spec);
-
-	    ConversionFunctions.sdfs.put (spec,
-					  df);
+		return this.toDate(value);
 
 	}
 
-	try
-	{
+	public Date to_date(String value, String spec)
+	        throws QueryExecutionException {
 
-	    return df.parse (value);
-
-	} catch (Exception e) {
-
-	    throw new QueryExecutionException ("Unable to parse date value: " + 
-					       value + 
-					       " using spec: " + 
-					       spec,
-					       e);
+		return this.toDate(value, spec);
 
 	}
 
-    }
+	public Date toDate(String value, String spec)
+	        throws QueryExecutionException {
 
-    public Long toMillis (Date d)
-    {
+		if (spec == null) {
 
-	return new Long (d.getTime ());
+			spec = ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC;
 
-    }
+		}
 
-    public Long toDateMillis (String value,
-			      String spec)
-	                      throws QueryExecutionException
-    {
+		SimpleDateFormat df = (SimpleDateFormat) ConversionFunctions.sdfs
+		        .get(spec);
 
-	if (spec == null)
-	{
+		if (df == null) {
 
-	    spec = ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC;
+			df = new SimpleDateFormat(spec);
 
-	}
+			ConversionFunctions.sdfs.put(spec, df);
 
-	SimpleDateFormat df = (SimpleDateFormat) ConversionFunctions.sdfs.get (spec);
+		}
 
-	if (df == null)
-	{
+		try {
 
-	    df = new SimpleDateFormat (spec);
+			return df.parse(value);
 
-	    ConversionFunctions.sdfs.put (spec,
-					  df);
+		} catch (Exception e) {
 
-	}
+			throw new QueryExecutionException("Unable to parse date value: "
+			        + value + " using spec: " + spec, e);
 
-	try
-	{
-
-	    Date d = df.parse (value);
-
-	    return new Long (d.getTime ());
-
-	} catch (Exception e) {
-
-	    throw new QueryExecutionException ("Unable to parse date value: " + 
-					       value + 
-					       " using spec: " + 
-					       spec,
-					       e);
+		}
 
 	}
 
-    }
+	public Long toMillis(Date d) {
 
-    public String upper (Object o)
-    {
-
-	if (o == null)
-	{
-
-	    return null;
+		return new Long(d.getTime());
 
 	}
 
-	return o.toString ().toUpperCase ();
+	public Long toDateMillis(String value, String spec)
+	        throws QueryExecutionException {
 
-    }
+		if (spec == null) {
 
-    public String lower (Object o)
-    {
+			spec = ConversionFunctions.DEFAULT_DATE_FORMAT_SPEC;
 
-	if (o == null)
-	{
+		}
 
-	    return null;
+		SimpleDateFormat df = (SimpleDateFormat) ConversionFunctions.sdfs
+		        .get(spec);
 
-	}
+		if (df == null) {
 
-	return o.toString ().toLowerCase ();
+			df = new SimpleDateFormat(spec);
 
-    }
+			ConversionFunctions.sdfs.put(spec, df);
 
-    public String to_string (Object o)
-    {
-	
-	return this.toString (o);
+		}
 
-    }
+		try {
 
-    public String toString (Object o)
-    {
+			Date d = df.parse(value);
 
-	return o + "";
+			return new Long(d.getTime());
 
-    }
+		} catch (Exception e) {
 
-    public Number to_number (Object o)
-    {
+			throw new QueryExecutionException("Unable to parse date value: "
+			        + value + " using spec: " + spec, e);
 
-	return this.toNumber (o);
-
-    }
-
-    public Number toNumber (Object o)
-    {
-
-	if (o == null)
-	{
-
-	    return null;
+		}
 
 	}
 
-	if (o instanceof String)
-	{
+	public String upper(Object o) {
 
-	    // Try and parse as a double.
-	    try
-	    {
+		if (o == null) {
 
-		return new Double ((String) o);
+			return null;
 
-	    } catch (Exception e) {
+		}
 
-		// Ignore?  Maybe have an option...
-
-	    }
+		return o.toString().toUpperCase();
 
 	}
 
-	if (o instanceof Date)
-	{
+	public String lower(Object o) {
 
-	    return new Double (((Date) o).getTime ());
+		if (o == null) {
 
-	}
+			return null;
 
-	if (!(o instanceof Number))
-	{
+		}
 
-	    return null;
+		return o.toString().toLowerCase();
 
 	}
 
-	return (Number) o;
+	public String to_string(Object o) {
 
-    }
+		return this.toString(o);
+
+	}
+
+	public String toString(Object o) {
+
+		return o + "";
+
+	}
+
+	public Number to_number(Object o) {
+
+		return this.toNumber(o);
+
+	}
+
+	public Number toNumber(Object o) {
+
+		if (o == null) {
+
+			return null;
+
+		}
+
+		if (o instanceof String) {
+
+			// Try and parse as a double.
+			try {
+
+				return new Double((String) o);
+
+			} catch (Exception e) {
+
+				// Ignore? Maybe have an option...
+
+			}
+
+		}
+
+		if (o instanceof Date) {
+
+			return new Double(((Date) o).getTime());
+
+		}
+
+		if (!(o instanceof Number)) {
+
+			return null;
+
+		}
+
+		return (Number) o;
+
+	}
 
 }

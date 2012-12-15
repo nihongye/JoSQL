@@ -17,103 +17,89 @@ package com.gentlyweb.utils;
 
 import java.util.Map.Entry;
 
-public class ItemPair implements Entry
-{
+public class ItemPair implements Entry {
 
-    private Object key = null;
-    private Object value = null;
+	private Object key = null;
+	private Object value = null;
 
-    public ItemPair (Object key,
-		     Object value)
-    {
+	public ItemPair(Object key, Object value) {
 
-	this.key = key;
-	this.value = value;
-
-    }
-
-    /**
-     * This method just uses the algorithm defined in the Map.Entry interface.
-     *
-     * @return The hash code.
-     */
-    public int hashCode ()
-    {
-
-	int k = 0;
-	int v = 0;
-
-	if (this.key != null)
-	{
-
-	    k = this.value.hashCode ();
-
-	} 
-
-	if (this.value != null)
-	{
-
-	    v = this.value.hashCode ();
+		this.key = key;
+		this.value = value;
 
 	}
 
-	return k ^ v;
+	/**
+	 * This method just uses the algorithm defined in the Map.Entry interface.
+	 * 
+	 * @return The hash code.
+	 */
+	public int hashCode() {
 
-    }
+		int k = 0;
+		int v = 0;
 
-    public Object getKey ()
-    {
+		if (this.key != null) {
 
-	return this.key;
+			k = this.value.hashCode();
 
-    }
+		}
 
-    public Object setValue (Object value)
-    {
+		if (this.value != null) {
 
-	Object old = this.value;
-	this.value = value;
+			v = this.value.hashCode();
 
-	return old;
+		}
 
-    }
-
-    public Object getValue ()
-    {
-
-	return this.value;
-
-    }
-
-    /**
-     * This method just uses the algorithm defined in the Map.Entry interface.
-     *
-     * @return The hash code.
-     */
-    public boolean equals (Object o)
-    {
-
-	if (!(o instanceof ItemPair))
-	{
-
-	    return false;
+		return k ^ v;
 
 	}
 
-	ItemPair ipo = (ItemPair) o;
+	public Object getKey() {
 
-	if ((ipo.getKey ().equals (this.key))
-	    &&
-	    (ipo.getValue ().equals (this.value))
-	   )
-	{
-
-	    return true;
+		return this.key;
 
 	}
-	    
-	return false;
 
-    }
+	public Object setValue(Object value) {
+
+		Object old = this.value;
+		this.value = value;
+
+		return old;
+
+	}
+
+	public Object getValue() {
+
+		return this.value;
+
+	}
+
+	/**
+	 * This method just uses the algorithm defined in the Map.Entry interface.
+	 * 
+	 * @return The hash code.
+	 */
+	public boolean equals(Object o) {
+
+		if (!(o instanceof ItemPair)) {
+
+			return false;
+
+		}
+
+		ItemPair ipo = (ItemPair) o;
+
+		if ((ipo.getKey().equals(this.key))
+		        && (ipo.getValue().equals(this.value))) {
+
+			return true;
+
+		}
+
+		return false;
+
+	}
 
 }

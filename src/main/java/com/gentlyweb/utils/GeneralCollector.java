@@ -23,355 +23,297 @@ import java.util.Map.Entry;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class GeneralCollector
-{
+public class GeneralCollector {
 
-    public static final String KEYS = "KEYS";
-    public static final String VALUES = "VALUES";
+	public static final String KEYS = "KEYS";
+	public static final String VALUES = "VALUES";
 
-    private Class clazz = null;
-    private String field = null;
-    private List accessorChain = null;
+	private Class clazz = null;
+	private String field = null;
+	private List accessorChain = null;
 
-    public GeneralCollector (Class c)
-    {
+	public GeneralCollector(Class c) {
 
-	this.clazz = c;
+		this.clazz = c;
 
-    }
+	}
 
-    public GeneralCollector (Class  c,
-			     String field)
-    {
+	public GeneralCollector(Class c, String field) {
 
-	this (c);
+		this(c);
 
-	this.setField (field);
+		this.setField(field);
 
-    }
+	}
 
-    public void collect (Map    objects,
-			 String type,
-			 List   retData)
-	                 throws IllegalArgumentException,
-                                IllegalAccessException,
-                                InvocationTargetException
-    {
+	public void collect(Map objects, String type, List retData)
+	        throws IllegalArgumentException, IllegalAccessException,
+	        InvocationTargetException {
 
-	Iterator iter = objects.entrySet ().iterator ();
+		Iterator iter = objects.entrySet().iterator();
 
-	while (iter.hasNext ())
-	{
+		while (iter.hasNext()) {
 
-	    Map.Entry obj = (Map.Entry) iter.next ();
-	    Object key = obj.getKey ();
-	    Object value = obj.getValue ();
+			Map.Entry obj = (Map.Entry) iter.next();
+			Object key = obj.getKey();
+			Object value = obj.getValue();
 
-	    if (type.equals (GeneralCollector.KEYS))
-	    {
+			if (type.equals(GeneralCollector.KEYS)) {
 
-		if (!key.getClass ().isAssignableFrom (this.clazz))
-		{
-		    
-		    throw new IllegalArgumentException ("Expected key object to be of type: " +
-							this.clazz.getName () +
-							", got: " +
-							key.getClass ().getName ());
-		    
+				if (!key.getClass().isAssignableFrom(this.clazz)) {
+
+					throw new IllegalArgumentException(
+					        "Expected key object to be of type: "
+					                + this.clazz.getName() + ", got: "
+					                + key.getClass().getName());
+
+				}
+
+				retData.add(Accessor.getValueFromAccessorChain(key,
+				        this.accessorChain));
+
+			} else {
+
+				if (!value.getClass().isAssignableFrom(this.clazz)) {
+
+					throw new IllegalArgumentException(
+					        "Expected value object to be of type: "
+					                + this.clazz.getName() + ", got: "
+					                + value.getClass().getName());
+
+				}
+
+				retData.add(Accessor.getValueFromAccessorChain(value,
+				        this.accessorChain));
+
+			}
+
 		}
 
-		retData.add (Accessor.getValueFromAccessorChain (key,
-								 this.accessorChain));
+	}
 
-	    } else {
+	public void collect(Map objects, String type, Collection retData)
+	        throws IllegalArgumentException, IllegalAccessException,
+	        InvocationTargetException {
 
-		if (!value.getClass ().isAssignableFrom (this.clazz))
-		{
-		    
-		    throw new IllegalArgumentException ("Expected value object to be of type: " +
-							this.clazz.getName () +
-							", got: " +
-							value.getClass ().getName ());
-		    
+		Iterator iter = objects.entrySet().iterator();
+
+		while (iter.hasNext()) {
+
+			Map.Entry obj = (Map.Entry) iter.next();
+			Object key = obj.getKey();
+			Object value = obj.getValue();
+
+			if (type.equals(GeneralCollector.KEYS)) {
+
+				if (!key.getClass().isAssignableFrom(this.clazz)) {
+
+					throw new IllegalArgumentException(
+					        "Expected key object to be of type: "
+					                + this.clazz.getName() + ", got: "
+					                + key.getClass().getName());
+
+				}
+
+				retData.add(Accessor.getValueFromAccessorChain(key,
+				        this.accessorChain));
+
+			} else {
+
+				if (!value.getClass().isAssignableFrom(this.clazz)) {
+
+					throw new IllegalArgumentException(
+					        "Expected value object to be of type: "
+					                + this.clazz.getName() + ", got: "
+					                + value.getClass().getName());
+
+				}
+
+				retData.add(Accessor.getValueFromAccessorChain(value,
+				        this.accessorChain));
+
+			}
+
 		}
 
-		retData.add (Accessor.getValueFromAccessorChain (value,
-								 this.accessorChain));
-
-	    }
-
 	}
 
-    }
+	public void collect(Map objects, String type, Map retData)
+	        throws IllegalArgumentException, IllegalAccessException,
+	        InvocationTargetException {
 
-    public void collect (Map        objects,
-			 String     type,
-			 Collection retData)
-	                 throws     IllegalArgumentException,
-                                    IllegalAccessException,
-                                    InvocationTargetException
-    {
+		Iterator iter = objects.entrySet().iterator();
 
-	Iterator iter = objects.entrySet ().iterator ();
+		while (iter.hasNext()) {
 
-	while (iter.hasNext ())
-	{
+			Map.Entry obj = (Map.Entry) iter.next();
+			Object key = obj.getKey();
+			Object value = obj.getValue();
 
-	    Map.Entry obj = (Map.Entry) iter.next ();
-	    Object key = obj.getKey ();
-	    Object value = obj.getValue ();
+			if (type.equals(GeneralCollector.KEYS)) {
 
-	    if (type.equals (GeneralCollector.KEYS))
-	    {
+				if (!key.getClass().isAssignableFrom(this.clazz)) {
 
-		if (!key.getClass ().isAssignableFrom (this.clazz))
-		{
-		    
-		    throw new IllegalArgumentException ("Expected key object to be of type: " +
-							this.clazz.getName () +
-							", got: " +
-							key.getClass ().getName ());
-		    
+					throw new IllegalArgumentException(
+					        "Expected key object to be of type: "
+					                + this.clazz.getName() + ", got: "
+					                + key.getClass().getName());
+
+				}
+
+				retData.put(Accessor.getValueFromAccessorChain(key,
+				        this.accessorChain), value);
+
+			} else {
+
+				if (!value.getClass().isAssignableFrom(this.clazz)) {
+
+					throw new IllegalArgumentException(
+					        "Expected value object to be of type: "
+					                + this.clazz.getName() + ", got: "
+					                + value.getClass().getName());
+
+				}
+
+				retData.put(key, Accessor.getValueFromAccessorChain(value,
+				        this.accessorChain));
+
+			}
+
 		}
 
-		retData.add (Accessor.getValueFromAccessorChain (key,
-								 this.accessorChain));
+	}
 
-	    } else {
+	public void collect(Collection objects, Collection retData)
+	        throws IllegalArgumentException, IllegalAccessException,
+	        InvocationTargetException {
 
-		if (!value.getClass ().isAssignableFrom (this.clazz))
-		{
-		    
-		    throw new IllegalArgumentException ("Expected value object to be of type: " +
-							this.clazz.getName () +
-							", got: " +
-							value.getClass ().getName ());
-		    
+		Iterator iter = objects.iterator();
+
+		while (iter.hasNext()) {
+
+			Object o = iter.next();
+
+			if (!o.getClass().isAssignableFrom(this.clazz)) {
+
+				throw new IllegalArgumentException(
+				        "Expected object to be of type: "
+				                + this.clazz.getName() + ", got: "
+				                + o.getClass().getName());
+
+			}
+
+			// Apply the fields...
+			retData.add(Accessor.getValueFromAccessorChain(o,
+			        this.accessorChain));
+
 		}
 
-		retData.add (Accessor.getValueFromAccessorChain (value,
-								 this.accessorChain));
-
-	    }
-
 	}
 
-    }
+	public void collect(Collection objects, List retData)
+	        throws IllegalArgumentException, IllegalAccessException,
+	        InvocationTargetException {
 
-    public void collect (Map    objects,
-			 String type,
-			 Map    retData)
-	                 throws IllegalArgumentException,
-                                IllegalAccessException,
-                                InvocationTargetException
-    {
+		Iterator iter = objects.iterator();
 
-	Iterator iter = objects.entrySet ().iterator ();
+		while (iter.hasNext()) {
 
-	while (iter.hasNext ())
-	{
+			Object o = iter.next();
 
-	    Map.Entry obj = (Map.Entry) iter.next ();
-	    Object key = obj.getKey ();
-	    Object value = obj.getValue ();
+			if (!o.getClass().isAssignableFrom(this.clazz)) {
 
-	    if (type.equals (GeneralCollector.KEYS))
-	    {
+				throw new IllegalArgumentException(
+				        "Expected object to be of type: "
+				                + this.clazz.getName() + ", got: "
+				                + o.getClass().getName());
 
-		if (!key.getClass ().isAssignableFrom (this.clazz))
-		{
-		    
-		    throw new IllegalArgumentException ("Expected key object to be of type: " +
-							this.clazz.getName () +
-							", got: " +
-							key.getClass ().getName ());
-		    
+			}
+
+			// Apply the fields...
+			retData.add(Accessor.getValueFromAccessorChain(o,
+			        this.accessorChain));
+
 		}
 
-		retData.put (Accessor.getValueFromAccessorChain (key,
-								 this.accessorChain),
-			     value);
+	}
 
-	    } else {
+	public void collect(List objects, List retData)
+	        throws IllegalArgumentException, IllegalAccessException,
+	        InvocationTargetException {
 
-		if (!value.getClass ().isAssignableFrom (this.clazz))
-		{
-		    
-		    throw new IllegalArgumentException ("Expected value object to be of type: " +
-							this.clazz.getName () +
-							", got: " +
-							value.getClass ().getName ());
-		    
+		for (int i = 0; i < objects.size(); i++) {
+
+			Object o = objects.get(i);
+
+			if (!o.getClass().isAssignableFrom(this.clazz)) {
+
+				throw new IllegalArgumentException("Expected object at index: "
+				        + i + " to be of type: " + this.clazz.getName()
+				        + ", got: " + o.getClass().getName());
+
+			}
+
+			// Apply the fields...
+			retData.add(Accessor.getValueFromAccessorChain(o,
+			        this.accessorChain));
+
 		}
 
-		retData.put (key,
-			     Accessor.getValueFromAccessorChain (value,
-								 this.accessorChain));
+	}
 
-	    }
+	public void collect(List objects, Collection retData)
+	        throws IllegalArgumentException, IllegalAccessException,
+	        InvocationTargetException {
+
+		for (int i = 0; i < objects.size(); i++) {
+
+			Object o = objects.get(i);
+
+			if (!o.getClass().isAssignableFrom(this.clazz)) {
+
+				throw new IllegalArgumentException("Expected object at index: "
+				        + i + " to be of type: " + this.clazz.getName()
+				        + ", got: " + o.getClass().getName());
+
+			}
+
+			// Apply the fields...
+			retData.add(Accessor.getValueFromAccessorChain(o,
+			        this.accessorChain));
+
+		}
 
 	}
 
-    }
+	/**
+	 * Set the field that we collect if you readd the same field then the type
+	 * is just updated.
+	 * 
+	 * @param field
+	 *            The field to sort on.
+	 * @throws IllegalArgumentException
+	 *             If we can't find the field in the class/class chain passed
+	 *             into the constructor.
+	 */
+	public void setField(String field) throws IllegalArgumentException {
 
-    public void collect (Collection objects,
-			 Collection retData)
-	                 throws     IllegalArgumentException,
-                                    IllegalAccessException,
-                                    InvocationTargetException
-    {
+		// Find the field...
+		this.field = field;
 
-	Iterator iter = objects.iterator ();
-
-	while (iter.hasNext ())
-	{
-
-	    Object o = iter.next ();
-
-	    if (!o.getClass ().isAssignableFrom (this.clazz))
-	    {
-
-		throw new IllegalArgumentException ("Expected object to be of type: " +
-						    this.clazz.getName () +
-						    ", got: " +
-						    o.getClass ().getName ());
-
-	    }
-
-	    // Apply the fields...
-	    retData.add (Accessor.getValueFromAccessorChain (o,
-							     this.accessorChain));
+		this.accessorChain = Accessor.getAccessorChain(field, this.clazz);
 
 	}
 
-    }
+	/**
+	 * Get a field given a field name.
+	 * 
+	 * @return The field or null if the field hasn't been set yet.
+	 */
+	public String getField() {
 
-    public void collect (Collection objects,
-			 List       retData)
-	                 throws     IllegalArgumentException,
-                                    IllegalAccessException,
-                                    InvocationTargetException
-    {
-
-	Iterator iter = objects.iterator ();
-
-	while (iter.hasNext ())
-	{
-
-	    Object o = iter.next ();
-
-	    if (!o.getClass ().isAssignableFrom (this.clazz))
-	    {
-
-		throw new IllegalArgumentException ("Expected object to be of type: " +
-						    this.clazz.getName () +
-						    ", got: " +
-						    o.getClass ().getName ());
-
-	    }
-
-	    // Apply the fields...
-	    retData.add (Accessor.getValueFromAccessorChain (o,
-							     this.accessorChain));
+		return this.field;
 
 	}
-
-    }
-
-    public void collect (List   objects,
-			 List   retData)
-	                 throws IllegalArgumentException,
-                                IllegalAccessException,
-                                InvocationTargetException
-    {
-
-	for (int i = 0; i < objects.size (); i++)
-	{
-
-	    Object o = objects.get (i);
-
-	    if (!o.getClass ().isAssignableFrom (this.clazz))
-	    {
-
-		throw new IllegalArgumentException ("Expected object at index: " +
-						    i +
-						    " to be of type: " +
-						    this.clazz.getName () +
-						    ", got: " +
-						    o.getClass ().getName ());
-
-	    }
-
-	    // Apply the fields...
-	    retData.add (Accessor.getValueFromAccessorChain (o,
-							     this.accessorChain));
-
-	}
-
-    }
-
-    public void collect (List       objects,
-			 Collection retData)
-	                 throws     IllegalArgumentException,
-	                            IllegalAccessException,
-                                    InvocationTargetException
-    {
-
-	for (int i = 0; i < objects.size (); i++)
-	{
-
-	    Object o = objects.get (i);
-
-	    if (!o.getClass ().isAssignableFrom (this.clazz))
-	    {
-
-		throw new IllegalArgumentException ("Expected object at index: " +
-						    i +
-						    " to be of type: " +
-						    this.clazz.getName () +
-						    ", got: " +
-						    o.getClass ().getName ());
-
-	    }
-
-	    // Apply the fields...
-	    retData.add (Accessor.getValueFromAccessorChain (o,
-							     this.accessorChain));
-
-	}
-
-    }
-
-    /**
-     * Set the field that we collect if you readd the same field then
-     * the type is just updated.  
-     *
-     * @param field The field to sort on.
-     * @throws IllegalArgumentException If we can't find the field in the
-     *                                  class/class chain passed into the constructor.
-     */
-    public void setField (String field)
-                          throws IllegalArgumentException
-    {
-
-	// Find the field...
-	this.field = field;
-
-	this.accessorChain = Accessor.getAccessorChain (field,
-							this.clazz);
-
-    }
-
-    /**
-     * Get a field given a field name.
-     *
-     * @return The field or null if the field hasn't been set yet.
-     */
-    public String getField ()
-    {
-
-	return this.field;
-
-    }
 
 }

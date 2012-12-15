@@ -14,38 +14,33 @@
  */
 package org.josql.internal;
 
-public class ColumnReference
-{
+public class ColumnReference {
 
-    private int index = -1;
-    private String name = null;
+	private int index = -1;
+	private String name = null;
 
-    public void setName (String n)
-    {
+	public void setName(String n) {
 
-	this.name = n;
+		this.name = n;
 
-    }
+	}
 
-    public String getName ()
-    {
+	public String getName() {
 
-	return this.name;
+		return this.name;
 
-    }
+	}
 
-    public int getIndex ()
-    {
+	public int getIndex() {
 
-	return this.index;
+		return this.index;
 
-    }
+	}
 
-    public void setIndex (int ind)
-    {
+	public void setIndex(int ind) {
 
-	this.index = ind;
+		this.index = ind;
 
-    }
+	}
 
 }

@@ -21,20 +21,24 @@ import org.josql.Query;
 import org.josql.QueryParseException;
 
 /**
- * A {@link Filter} that uses a JoSQL statement to provide the filtering.
- * The value returned by the {@link #isLoggable(LogRecord)} method is determined by executing the
- * WHERE clause of a JoSQL statement on each {@link LogRecord} passed in.
+ * A {@link Filter} that uses a JoSQL statement to provide the filtering. The
+ * value returned by the {@link #isLoggable(LogRecord)} method is determined by
+ * executing the WHERE clause of a JoSQL statement on each {@link LogRecord}
+ * passed in.
  * <p>
- * Since this uses a sub-set of the JoSQL functionality certain restrictions apply:
+ * Since this uses a sub-set of the JoSQL functionality certain restrictions
+ * apply:
  * <ul>
- *   <li>The SELECT clause is ignored.</li>
- *   <li>The object defined in the FROM clause <b>must</b> be java.util.logging.LogRecord</li>
- *   <li>EXECUTE ON functions are not supported here since there is no way to get the entire set
- *       of objects to work on.</li>
- *   <li>ORDER BY, GROUP BY, HAVING and LIMIT clauses are ignored.</li>
- * </ul>  
+ * <li>The SELECT clause is ignored.</li>
+ * <li>The object defined in the FROM clause <b>must</b> be
+ * java.util.logging.LogRecord</li>
+ * <li>EXECUTE ON functions are not supported here since there is no way to get
+ * the entire set of objects to work on.</li>
+ * <li>ORDER BY, GROUP BY, HAVING and LIMIT clauses are ignored.</li>
+ * </ul>
  * Examples:
  * <p>
+ * 
  * <pre>
  *   SELECT *
  *   FROM   {@link LogRecord java.tuil.logging.LogRecord}
@@ -46,110 +50,107 @@ import org.josql.QueryParseException;
  *   AND    level.name IN ('SEVERE', 'WARNING')
  * </pre>
  * <p>
- * If you are using a custom log record then you can always just extend this class and override
- * the {@link #getExpectedClass()} method to return your specific sub-class.
- */  
-public class JoSQLLogRecordFilter extends AbstractJoSQLFilter implements Filter
-{
+ * If you are using a custom log record then you can always just extend this
+ * class and override the {@link #getExpectedClass()} method to return your
+ * specific sub-class.
+ */
+public class JoSQLLogRecordFilter extends AbstractJoSQLFilter implements Filter {
 
-    protected Class expected = LogRecord.class;
+	protected Class expected = LogRecord.class;
 
-    /**
-     * Init this filter with the query.
-     * 
-     * @param q The query.
-     * @throws QueryParseException If there is an issue with the parsing of the query, 
-     *                             or if the FROM class is not {@link LogRecord}.
-     */
-    public JoSQLLogRecordFilter (String q)
-	                         throws QueryParseException
-    {
+	/**
+	 * Init this filter with the query.
+	 * 
+	 * @param q
+	 *            The query.
+	 * @throws QueryParseException
+	 *             If there is an issue with the parsing of the query, or if the
+	 *             FROM class is not {@link LogRecord}.
+	 */
+	public JoSQLLogRecordFilter(String q) throws QueryParseException {
 
-	super (q);
-
-    }
-
-    /**
-     * Init this filter with the query already built and parsed.
-     * 
-     * @param q The query.
-     * @throws IllegalStateException If the Query object has not been parsed.
-     * @throws QueryParseException If the FROM class is not {@link LogRecord}.
-     */
-    public JoSQLLogRecordFilter (Query  q)
-	                         throws IllegalStateException,
-	                                QueryParseException
-    {
-
-	super (q);
-
-    }
-
-    public boolean accept (Object o)
-    {
-
-	if (!(o instanceof LogRecord))
-	{
-
-	    throw new IllegalArgumentException ("Expected object to be of type: " + 
-						LogRecord.class.getName () +
-						", got: " +
-						o.getClass ().getName ());
+		super(q);
 
 	}
 
-	return this.accept ((LogRecord) o);
+	/**
+	 * Init this filter with the query already built and parsed.
+	 * 
+	 * @param q
+	 *            The query.
+	 * @throws IllegalStateException
+	 *             If the Query object has not been parsed.
+	 * @throws QueryParseException
+	 *             If the FROM class is not {@link LogRecord}.
+	 */
+	public JoSQLLogRecordFilter(Query q) throws IllegalStateException,
+	        QueryParseException {
 
-    }
-
-    /**
-     * Apply the WHERE clause of the statement to the {@link LogRecord} passed in.
-     * If an exception is thrown by the execution of the WHERE clause the Query 
-     * is marked as "dirty" and the where clause is no longer executed on the passed in 
-     * files (since it is likely that the WHERE clause will fail for all LogRecord objects).  
-     * You can get access to exception by using: {@link #getException()}.
-     *
-     * @param l The log record to evaluate the WHERE on.
-     * @return <code>true</code> if the WHERE clause evaluates to <code>true</code>.
-     */
-    public boolean isLoggable (LogRecord l)
-    {
-	
-	if (this.badQuery)
-	{
-
-	    return false;
+		super(q);
 
 	}
 
-	try
-	{
+	public boolean accept(Object o) {
 
-	    return this.q.getWhereClause ().isTrue (l,
-						    this.q);
+		if (!(o instanceof LogRecord)) {
 
-	} catch (Exception e) {
+			throw new IllegalArgumentException(
+			        "Expected object to be of type: "
+			                + LogRecord.class.getName() + ", got: "
+			                + o.getClass().getName());
 
-	    this.badQuery = true;
+		}
 
-	    this.exp = e;
+		return this.accept((LogRecord) o);
 
 	}
 
-	return false;
+	/**
+	 * Apply the WHERE clause of the statement to the {@link LogRecord} passed
+	 * in. If an exception is thrown by the execution of the WHERE clause the
+	 * Query is marked as "dirty" and the where clause is no longer executed on
+	 * the passed in files (since it is likely that the WHERE clause will fail
+	 * for all LogRecord objects). You can get access to exception by using:
+	 * {@link #getException()}.
+	 * 
+	 * @param l
+	 *            The log record to evaluate the WHERE on.
+	 * @return <code>true</code> if the WHERE clause evaluates to
+	 *         <code>true</code>.
+	 */
+	public boolean isLoggable(LogRecord l) {
 
-    }
+		if (this.badQuery) {
 
-    /**
-     * Always returns {@link LogRecord}.
-     *
-     * @return The log record class.
-     */
-    public Class getExpectedClass ()
-    {
+			return false;
 
-	return LogRecord.class;
+		}
 
-    }
+		try {
+
+			return this.q.getWhereClause().isTrue(l, this.q);
+
+		} catch (Exception e) {
+
+			this.badQuery = true;
+
+			this.exp = e;
+
+		}
+
+		return false;
+
+	}
+
+	/**
+	 * Always returns {@link LogRecord}.
+	 * 
+	 * @return The log record class.
+	 */
+	public Class getExpectedClass() {
+
+		return LogRecord.class;
+
+	}
 
 }

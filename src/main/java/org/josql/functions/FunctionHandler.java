@@ -17,20 +17,20 @@ package org.josql.functions;
 import org.josql.Query;
 
 /**
- * Defines an interface that custom objects can use to indicate that they can 
- * store a reference to the Query object.
- * A function handler object does NOT have to implement this class, this is here purely
- * as a convenience for developers so that they can easily get a reference to the Query
- * object, since the Query object will call the {@link #setQuery(Query)} method.
+ * Defines an interface that custom objects can use to indicate that they can
+ * store a reference to the Query object. A function handler object does NOT
+ * have to implement this class, this is here purely as a convenience for
+ * developers so that they can easily get a reference to the Query object, since
+ * the Query object will call the {@link #setQuery(Query)} method.
  */
-public interface FunctionHandler
-{
+public interface FunctionHandler {
 
-    /**
-     * Set the Query object that the function handler should use.
-     *
-     * @param q The Query object.
-     */
-    public void setQuery (Query q);
+	/**
+	 * Set the Query object that the function handler should use.
+	 * 
+	 * @param q
+	 *            The Query object.
+	 */
+	public void setQuery(Query q);
 
 }

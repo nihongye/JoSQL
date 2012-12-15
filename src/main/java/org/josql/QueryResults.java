@@ -19,143 +19,132 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * This class holds all the "result" information about the execution of a particular
- * Query.  It should be noted that this class holds no reference to the Query object
- * so that a query can be executed, the results "processed" in some way and then the
- * results can be cleaned up by the GC. 
+ * This class holds all the "result" information about the execution of a
+ * particular Query. It should be noted that this class holds no reference to
+ * the Query object so that a query can be executed, the results "processed" in
+ * some way and then the results can be cleaned up by the GC.
  * <p>
+ * 
  * @see org.josql.Query#execute(List)
  */
-public class QueryResults
-{
+public class QueryResults {
 
-    // Execution data.
-    Map saveValues = new HashMap ();
-    Map timings = null;
-    List results = null;
-    List whereResults = null;
-    List havingResults = null;
-    Map groupByResults = null;
+	// Execution data.
+	Map saveValues = new HashMap();
+	Map timings = null;
+	List results = null;
+	List whereResults = null;
+	List havingResults = null;
+	Map groupByResults = null;
 
-    Map groupBySaveValues = null;
+	Map groupBySaveValues = null;
 
-    public QueryResults ()
-    {
-
-    }
-
-    public Map getGroupBySaveValues (List k)
-    {
-
-	if (this.groupBySaveValues == null)
-	{
-
-	    return null;
+	public QueryResults() {
 
 	}
 
-	return (Map) this.groupBySaveValues.get (k);
+	public Map getGroupBySaveValues(List k) {
 
-    }
+		if (this.groupBySaveValues == null) {
 
-    /**
-     * Get the save values.
-     *
-     * @return The save values.
-     */
-    public Map getSaveValues ()
-    {
+			return null;
 
-	return this.saveValues;
+		}
 
-    }
-
-    /**
-     * Get a particular save value for the passed in key.
-     *
-     * @param id The key of the save value.
-     * @return The value it maps to.
-     */
-    public Object getSaveValue (Object id)
-    {
-
-	if (this.saveValues == null)
-	{
-
-	    return null;
+		return (Map) this.groupBySaveValues.get(k);
 
 	}
 
-	if (id instanceof String)
-	{
+	/**
+	 * Get the save values.
+	 * 
+	 * @return The save values.
+	 */
+	public Map getSaveValues() {
 
-	    id = ((String) id).toLowerCase ();
+		return this.saveValues;
 
 	}
 
-	return this.saveValues.get (id);
+	/**
+	 * Get a particular save value for the passed in key.
+	 * 
+	 * @param id
+	 *            The key of the save value.
+	 * @return The value it maps to.
+	 */
+	public Object getSaveValue(Object id) {
 
-    }
+		if (this.saveValues == null) {
 
-    /**
-     * Get the results of executing the query, this is the "final" results, i.e.
-     * of executing ALL of the query.
-     *
-     * @return The results.
-     */
-    public List getResults ()
-    {
+			return null;
 
-	return this.results;
+		}
 
-    }
+		if (id instanceof String) {
 
-    /**
-     * Get the timing information, is a Map of string to double values.
-     *
-     * @return The timings.
-     */
-    public Map getTimings ()
-    {
+			id = ((String) id).toLowerCase();
 
-	return this.timings;
+		}
 
-    }
+		return this.saveValues.get(id);
 
-    /**
-     * Get the group by results.
-     *
-     * @return The group by results.
-     */
-    public Map getGroupByResults ()
-    {
+	}
 
-	return this.groupByResults;
+	/**
+	 * Get the results of executing the query, this is the "final" results, i.e.
+	 * of executing ALL of the query.
+	 * 
+	 * @return The results.
+	 */
+	public List getResults() {
 
-    }    
+		return this.results;
 
-    /**
-     * Get the having results.
-     *
-     * @return The having results.
-     */
-    public List getHavingResults ()
-    {
+	}
 
-	return this.havingResults;
+	/**
+	 * Get the timing information, is a Map of string to double values.
+	 * 
+	 * @return The timings.
+	 */
+	public Map getTimings() {
 
-    }
+		return this.timings;
 
-    /**
-     * Get the where results.
-     *
-     * @return The where results.
-     */
-    public List getWhereResults ()
-    {
+	}
 
-	return this.whereResults;
+	/**
+	 * Get the group by results.
+	 * 
+	 * @return The group by results.
+	 */
+	public Map getGroupByResults() {
 
-    }
+		return this.groupByResults;
+
+	}
+
+	/**
+	 * Get the having results.
+	 * 
+	 * @return The having results.
+	 */
+	public List getHavingResults() {
+
+		return this.havingResults;
+
+	}
+
+	/**
+	 * Get the where results.
+	 * 
+	 * @return The where results.
+	 */
+	public List getWhereResults() {
+
+		return this.whereResults;
+
+	}
 
 }

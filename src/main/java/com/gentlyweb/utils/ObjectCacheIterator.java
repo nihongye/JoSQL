@@ -17,37 +17,33 @@ package com.gentlyweb.utils;
 
 import java.util.Iterator;
 
-public class ObjectCacheIterator implements Iterator
-{
+public class ObjectCacheIterator implements Iterator {
 
-    private Iterator iter = null;
+	private Iterator iter = null;
 
-    public ObjectCacheIterator (ObjectCache cache)
-    {
-	
-	this.iter = cache.keysIterator ();
+	public ObjectCacheIterator(ObjectCache cache) {
 
-    }
+		this.iter = cache.keysIterator();
 
-    public void remove ()
-    {
+	}
 
-	throw new UnsupportedOperationException ("Remove not supported for ObjectCaches.");
+	public void remove() {
 
-    }
+		throw new UnsupportedOperationException(
+		        "Remove not supported for ObjectCaches.");
 
-    public Object next ()
-    {
+	}
 
-	return this.iter.next ();
+	public Object next() {
 
-    }
+		return this.iter.next();
 
-    public boolean hasNext ()
-    {
+	}
 
-	return this.iter.hasNext ();
+	public boolean hasNext() {
 
-    }
+		return this.iter.hasNext();
+
+	}
 
 }

@@ -13,23 +13,26 @@ import org.josql.QueryParseException;
 import org.josql.QueryResults;
 
 /**
- * make a test for josql Function,compare to SimpleQueryTest,to find Function bottleneck
- * to run the test,must use jvm options:<b>-server -Xms512m -Xmx512m -verbose:gc</b>
+ * make a test for josql Function,compare to SimpleQueryTest,to find Function
+ * bottleneck to run the test,must use jvm options:<b>-server -Xms512m -Xmx512m
+ * -verbose:gc</b>
+ * 
  * @author nihongye
- *
+ * 
  */
-public class FunctionTest extends AbstractPerformanceTest{
+public class FunctionTest extends AbstractPerformanceTest {
 	private Random random = new Random(System.currentTimeMillis());
 	private List<Foo> users;
 
 	@SuppressWarnings("unchecked")
 	protected long executeQuery() throws QueryParseException,
-			QueryExecutionException {
+	        QueryExecutionException {
 		// Create a new Query.
 		Query q = new Query();
 		q.addFunctionHandler(new FooFunction());
 		String sql = "select * from net.sf.josql.pf.support.Foo "
-			+ "	where f(:_currobj,'name') = 'someone'" + "	and f(:_currobj,'age') > 10";
+		        + "	where f(:_currobj,'name') = 'someone'"
+		        + "	and f(:_currobj,'age') > 10";
 		// Parse the SQL you are going to use.
 		q.parse(sql);
 		// Execute the query.
@@ -42,7 +45,7 @@ public class FunctionTest extends AbstractPerformanceTest{
 		return res.size();
 
 	}
-	
+
 	public List<Long> getTimes() {
 		return queryExecuteTimes;
 	}

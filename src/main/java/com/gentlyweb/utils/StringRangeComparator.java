@@ -15,10 +15,8 @@
  */
 package com.gentlyweb.utils;
 
-public interface StringRangeComparator
-{
+public interface StringRangeComparator {
 
-    public boolean inRange (Object o1,
-			    Object o2);
+	public boolean inRange(Object o1, Object o2);
 
 }

@@ -23,177 +23,146 @@ import org.josql.QueryParseException;
 import org.josql.internal.Utilities;
 
 /**
- * Represents an "accessor" into an object.  An accessor is basically a dot separated list
- * of method names, such as: <code>myObj.id.name</code>.
+ * Represents an "accessor" into an object. An accessor is basically a dot
+ * separated list of method names, such as: <code>myObj.id.name</code>.
  * <p>
- * All of the methods referenced must have no arguments and be "public" in the referring class.
- * You can use either the actual method name or the JavaBean naming convention.
- * Thus: <code>myObj.id.name</code> might also be represented as: <code>getMyObj.getId.getName</code>.
+ * All of the methods referenced must have no arguments and be "public" in the
+ * referring class. You can use either the actual method name or the JavaBean
+ * naming convention. Thus: <code>myObj.id.name</code> might also be represented
+ * as: <code>getMyObj.getId.getName</code>.
  */
-public class Accessor extends ValueExpression
-{
+public class Accessor extends ValueExpression {
 
-    private String acc = null;
-    private Getter get = null;
+	private String acc = null;
+	private Getter get = null;
 
-    public Class getExpectedReturnType (Query  q)
-	                                throws QueryParseException
-    {
+	public Class getExpectedReturnType(Query q) throws QueryParseException {
 
-	return this.get.getType ();
-
-    }
-
-    public void init (Query  q)
-	              throws QueryParseException
-    {
-
-	// Now init the getter.
-	try
-	{
-
-	    this.get = new Getter (this.acc,
-				   q.getFromObjectClass ());
-
-	} catch (Exception e) {
-
-	    throw new QueryParseException ("Unable to create getter: " + 
-					   this.acc,
-					   e);
+		return this.get.getType();
 
 	}
 
-    }
+	public void init(Query q) throws QueryParseException {
 
-    public String getAccessor ()
-    {
+		// Now init the getter.
+		try {
 
-	return this.acc;
+			this.get = new Getter(this.acc, q.getFromObjectClass());
 
-    }
+		} catch (Exception e) {
 
-    public void setAccessor (String a)
-    {
+			throw new QueryParseException("Unable to create getter: "
+			        + this.acc, e);
 
-	this.acc = a;
-
-    }
-
-    public Getter getGetter ()
-    {
-
-	return this.get;
-
-    }
-
-    public void setName (String name)
-    {
-
-	this.acc = name;
-
-    }
-
-    public boolean isTrue (Object o,
-			   Query  q)
-	                   throws QueryExecutionException
-    {
-
-	o = this.evaluate (o,
-			   q);
-
-	if (o == null)
-	{
-	    
-	    return false;
+		}
 
 	}
 
-	if (Utilities.isNumber (o))
-	{
+	public String getAccessor() {
 
-	    return Utilities.getDouble (o) > 0;
-
-	}
-
-	if (o instanceof Boolean)
-	{
-
-	    return ((Boolean) o).booleanValue ();
+		return this.acc;
 
 	}
 
-	// Not null so return true...
-	return true;
+	public void setAccessor(String a) {
 
-    }
-
-    public boolean hasFixedResult (Query q)
-    {
-
-	// Well duh...
-	return false;
-
-    }
-
-    public Object evaluate (Object o,
-			    Query  q)
-	                    throws QueryExecutionException
-    {
-
-	try
-	{
-
-	    return this.get.getValue (o);
-
-	} catch (Exception e) {
-
-	    throw new QueryExecutionException ("Unable to get value from: " +
-					       this + 
-					       " passed in object type: " +
-					       o.getClass ().getName () +
-					       " expecting: " +
-					       this.get.getType ().getName (),
-					       e);
+		this.acc = a;
 
 	}
 
-    }
+	public Getter getGetter() {
 
-    public boolean equals (Object o)
-    {
-
-	if (o == null)
-	{
-
-	    return false;
+		return this.get;
 
 	}
 
-	if (!(o instanceof Accessor))
-	{
+	public void setName(String name) {
 
-	    return false;
-
-	}
-
-	Accessor a = (Accessor) o;
-
-	return this.acc.equals (a.getAccessor ());
-
-    }
-
-    public String toString ()
-    {
-
-	if (this.isBracketed ())
-	{
-
-	    return "(" + this.acc + ")";
+		this.acc = name;
 
 	}
 
-	return this.acc + "[detail: " + this.get + "]";
+	public boolean isTrue(Object o, Query q) throws QueryExecutionException {
 
-    }
+		o = this.evaluate(o, q);
+
+		if (o == null) {
+
+			return false;
+
+		}
+
+		if (Utilities.isNumber(o)) {
+
+			return Utilities.getDouble(o) > 0;
+
+		}
+
+		if (o instanceof Boolean) {
+
+			return ((Boolean) o).booleanValue();
+
+		}
+
+		// Not null so return true...
+		return true;
+
+	}
+
+	public boolean hasFixedResult(Query q) {
+
+		// Well duh...
+		return false;
+
+	}
+
+	public Object evaluate(Object o, Query q) throws QueryExecutionException {
+
+		try {
+
+			return this.get.getValue(o);
+
+		} catch (Exception e) {
+
+			throw new QueryExecutionException("Unable to get value from: "
+			        + this + " passed in object type: "
+			        + o.getClass().getName() + " expecting: "
+			        + this.get.getType().getName(), e);
+
+		}
+
+	}
+
+	public boolean equals(Object o) {
+
+		if (o == null) {
+
+			return false;
+
+		}
+
+		if (!(o instanceof Accessor)) {
+
+			return false;
+
+		}
+
+		Accessor a = (Accessor) o;
+
+		return this.acc.equals(a.getAccessor());
+
+	}
+
+	public String toString() {
+
+		if (this.isBracketed()) {
+
+			return "(" + this.acc + ")";
+
+		}
+
+		return this.acc + "[detail: " + this.get + "]";
+
+	}
 
 }

@@ -1,10 +1,9 @@
 package org.josql.functions.regexp;
 
-public abstract class AbstractRegExpWrapper 
-{
+public abstract class AbstractRegExpWrapper {
 
-    public abstract boolean isAvailable ();
+	public abstract boolean isAvailable();
 
-    public abstract String getSupportedVersion ();
+	public abstract String getSupportedVersion();
 
 }

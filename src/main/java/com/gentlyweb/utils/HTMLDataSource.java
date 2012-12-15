@@ -22,53 +22,45 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import javax.activation.DataSource;
 
-public class HTMLDataSource implements DataSource
-{
+public class HTMLDataSource implements DataSource {
 
-    private String html;         
+	private String html;
 
-    public HTMLDataSource (String html) 
-    {
+	public HTMLDataSource(String html) {
 
-	this.html = html;
-    
-    }
-
-    public InputStream getInputStream () 
-                                       throws IOException 
-    {
-
-	if (this.html == null) 
-	{
-
-	    throw new IOException ("No HTML provided");
+		this.html = html;
 
 	}
-	
-	return new BufferedInputStream (new ByteArrayInputStream (this.html.getBytes()));
-    
-    }
 
-    public OutputStream getOutputStream () 
-                                         throws IOException 
-    {
+	public InputStream getInputStream() throws IOException {
 
-	throw new IOException ("Output not supported");
+		if (this.html == null) {
 
-    }
+			throw new IOException("No HTML provided");
 
-    public String getContentType() 
-    {
+		}
 
-	return "text/html; charset=\"iso-8859-1\"";
-        
-    }
-    
-    public String getName() 
-    {
-    
-        return "HTML DataSource for sending only";
-        
-    }
+		return new BufferedInputStream(new ByteArrayInputStream(
+		        this.html.getBytes()));
+
+	}
+
+	public OutputStream getOutputStream() throws IOException {
+
+		throw new IOException("Output not supported");
+
+	}
+
+	public String getContentType() {
+
+		return "text/html; charset=\"iso-8859-1\"";
+
+	}
+
+	public String getName() {
+
+		return "HTML DataSource for sending only";
+
+	}
 
 }

@@ -20,100 +20,89 @@ import org.josql.QueryExecutionException;
 /**
  * Represents an "IS NULL" (or "IS NOT NULL") expression.
  */
-public class IsNullExpression extends BinaryExpression
-{
+public class IsNullExpression extends BinaryExpression {
 
-    private boolean not = false;
+	private boolean not = false;
 
-    public boolean isNot ()
-    {
+	public boolean isNot() {
 
-	return this.not;
-
-    }
-
-    public void setNot (boolean v)
-    {
-
-	this.not = v;
-
-    }
-
-    /**
-     * Return a string representation of this expression.
-     * In the form: {@link Expression#toString()} IS [ NOT ] NULL
-     *
-     * @return A string representation of this expression.
-     */
-    public String toString ()
-    {
-
-	StringBuffer buf = new StringBuffer ("IS ");
-	
-	if (this.not)
-	{
-
-	    buf.append ("NOT ");
+		return this.not;
 
 	}
 
-	buf.append (this.left.toString ());
+	public void setNot(boolean v) {
 
-	if (this.isBracketed ())
-	{
-
-	    buf.insert (0,
-			"(");
-	    buf.append (")");
+		this.not = v;
 
 	}
 
-	return buf.toString ();
+	/**
+	 * Return a string representation of this expression. In the form:
+	 * {@link Expression#toString()} IS [ NOT ] NULL
+	 * 
+	 * @return A string representation of this expression.
+	 */
+	public String toString() {
 
-    }
+		StringBuffer buf = new StringBuffer("IS ");
 
-    /**
-     * Determine whether the LHS of this expression is or is not null.
-     * Note that this is equivalent to: <code>LHS = null</code> or:
-     * <code>LHS != null</code>.
-     *
-     * @param o The current object to perform the expression on.
-     * @param q The Query object.
-     * @return <code>true</code> if the LHS is null (or not null is specified).
-     * @throws QueryExecutionException If the expression cannot be evaluated.
-     */
-    public boolean isTrue (Object o,
-			   Query  q)
-	                   throws QueryExecutionException
-    {
+		if (this.not) {
 
-	// Get the left...
-	o = this.left.getValue (o,
-				q);
+			buf.append("NOT ");
 
-	if (o == null)
-	{
+		}
 
-	    if (this.not)
-	    {
+		buf.append(this.left.toString());
+
+		if (this.isBracketed()) {
+
+			buf.insert(0, "(");
+			buf.append(")");
+
+		}
+
+		return buf.toString();
+
+	}
+
+	/**
+	 * Determine whether the LHS of this expression is or is not null. Note that
+	 * this is equivalent to: <code>LHS = null</code> or:
+	 * <code>LHS != null</code>.
+	 * 
+	 * @param o
+	 *            The current object to perform the expression on.
+	 * @param q
+	 *            The Query object.
+	 * @return <code>true</code> if the LHS is null (or not null is specified).
+	 * @throws QueryExecutionException
+	 *             If the expression cannot be evaluated.
+	 */
+	public boolean isTrue(Object o, Query q) throws QueryExecutionException {
+
+		// Get the left...
+		o = this.left.getValue(o, q);
+
+		if (o == null) {
+
+			if (this.not) {
+
+				return false;
+
+			}
+
+			return true;
+
+		}
+
+		if (this.not) {
+
+			return true;
+
+		}
 
 		return false;
 
-	    }
-
-	    return true;
-
 	}
-
-	if (this.not)
-	{
-
-	    return true;
-
-	}
-
-	return false;
-
-    }
 
 }

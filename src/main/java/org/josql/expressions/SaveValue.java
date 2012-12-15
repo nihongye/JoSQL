@@ -22,233 +22,186 @@ import org.josql.QueryParseException;
 
 import org.josql.internal.Utilities;
 
-public class SaveValue extends ValueExpression
-{
+public class SaveValue extends ValueExpression {
 
-    private String name = null;
-    private String acc = null;
-    private Getter get = null;
+	private String name = null;
+	private String acc = null;
+	private Getter get = null;
 
-    public Class getExpectedReturnType (Query  q)
-	                                throws QueryParseException
-    {
+	public Class getExpectedReturnType(Query q) throws QueryParseException {
 
-	// See if the save value is already present.
-	Object sv = q.getSaveValue (this.name);
+		// See if the save value is already present.
+		Object sv = q.getSaveValue(this.name);
 
-	if (sv != null)
-	{
+		if (sv != null) {
 
-	    if (this.acc != null)
-	    {
+			if (this.acc != null) {
 
-		// Init the getter.
-		try
-		{
+				// Init the getter.
+				try {
 
-		    this.get = new Getter (this.acc,
-					   sv.getClass ());
+					this.get = new Getter(this.acc, sv.getClass());
 
-		} catch (Exception e) {
-		    
-		    throw new QueryParseException ("Unable to create dynamic getter from instance of type: " +
-						   sv.getClass ().getName () + 
-						   " for save value: " +
-						   this.name +
-						   " using accessor: " +
-						   this.acc,
-						   e);
+				} catch (Exception e) {
+
+					throw new QueryParseException(
+					        "Unable to create dynamic getter from instance of type: "
+					                + sv.getClass().getName()
+					                + " for save value: " + this.name
+					                + " using accessor: " + this.acc, e);
+
+				}
+
+				return this.get.getType();
+
+			}
+
+			return sv.getClass();
 
 		}
 
-		return this.get.getType ();
-
-	    }
-
-	    return sv.getClass ();
+		// No idea what it could be...
+		return Object.class;
 
 	}
 
-	// No idea what it could be...
-	return Object.class;
+	public void init(Query q) {
 
-    }
-
-    public void init (Query  q)
-    {
-
-	// Nothing to do...
-
-    }
-
-    public String getName ()
-    {
-
-	return this.name;
-
-    }
-
-    public void setName (String name)
-    {
-
-	this.name = name;
-
-    }
-
-    public Object getValue (Object o,
-			    Query  q)
-	                    throws QueryExecutionException
-    {
-
-	Object v = q.getSaveValue (this.name);
-
-	if (v == null)
-	{
-
-	    return v;
+		// Nothing to do...
 
 	}
 
-	// See if we have an accessor...
+	public String getName() {
 
-	if ((this.acc != null)
-	    &&
-	    (this.get == null)
-	   )
-	{
-
-	    try
-	    {
-
-		this.get = new Getter (this.acc,
-				       v.getClass ());
-
-	    } catch (Exception e) {
-
-		throw new QueryExecutionException ("Unable to create dynamic getter from instance of type: " +
-						   v.getClass ().getName () + 
-						   " for save value: " +
-						   this.name +
-						   " using accessor: " +
-						   this.acc,
-						   e);
-
-	    }
+		return this.name;
 
 	}
 
-	if (this.get != null)
-	{
+	public void setName(String name) {
 
-	    try
-	    {
-
-		v = this.get.getValue (v);
-
-	    } catch (Exception e) {
-
-		throw new QueryExecutionException ("Unable to get value from instance of type: " + 
-						   v.getClass ().getName () +
-						   " for save value: " + 
-						   this.name + 
-						   " using accessor: " + 
-						   this.acc,
-						   e);
-
-	    }
+		this.name = name;
 
 	}
 
-	return v;
+	public Object getValue(Object o, Query q) throws QueryExecutionException {
 
-    }
+		Object v = q.getSaveValue(this.name);
 
-    public boolean isTrue (Object o,
-			   Query  q)
-	                   throws QueryExecutionException
-    {
+		if (v == null) {
 
-	o = this.getValue (o,
-			   q);
+			return v;
 
-	if (o == null)
-	{
-	    
-	    return false;
+		}
 
-	}
+		// See if we have an accessor...
 
-	if (Utilities.isNumber (o))
-	{
+		if ((this.acc != null) && (this.get == null)) {
 
-	    return Utilities.getDouble (o) > 0;
+			try {
 
-	}
+				this.get = new Getter(this.acc, v.getClass());
 
-	// Not null so return true...
-	return true;
+			} catch (Exception e) {
 
-    }
+				throw new QueryExecutionException(
+				        "Unable to create dynamic getter from instance of type: "
+				                + v.getClass().getName() + " for save value: "
+				                + this.name + " using accessor: " + this.acc, e);
 
-    public String getAccessor ()
-    {
+			}
 
-	return this.acc;
+		}
 
-    }
+		if (this.get != null) {
 
-    public void setAccessor (String acc)
-    {
+			try {
 
-	this.acc = acc;
+				v = this.get.getValue(v);
 
-    }
+			} catch (Exception e) {
 
-    public Object evaluate (Object o,
-			    Query  q)
-	                    throws QueryExecutionException
-    {
+				throw new QueryExecutionException(
+				        "Unable to get value from instance of type: "
+				                + v.getClass().getName() + " for save value: "
+				                + this.name + " using accessor: " + this.acc, e);
 
-	return this.getValue (o,
-			      q);
+			}
 
-    }
+		}
 
-    public String toString ()
-    {
-
-	StringBuffer buf = new StringBuffer ();
-
-	buf.append ("@");
-	buf.append (this.name);
-
-	if (this.acc != null)
-	{
-
-	    buf.append (".");
-	    buf.append (this.acc);
+		return v;
 
 	}
 
-	if (this.isBracketed ())
-	{
+	public boolean isTrue(Object o, Query q) throws QueryExecutionException {
 
-	    buf.insert (0,
-			"(");
-	    buf.append (")");
+		o = this.getValue(o, q);
+
+		if (o == null) {
+
+			return false;
+
+		}
+
+		if (Utilities.isNumber(o)) {
+
+			return Utilities.getDouble(o) > 0;
+
+		}
+
+		// Not null so return true...
+		return true;
 
 	}
 
-	return buf.toString ();
+	public String getAccessor() {
 
-    }
+		return this.acc;
 
-    public boolean hasFixedResult (Query q)
-    {
+	}
 
-	// A save value cannot have a fixed result.
-	return false;
+	public void setAccessor(String acc) {
 
-    }
+		this.acc = acc;
+
+	}
+
+	public Object evaluate(Object o, Query q) throws QueryExecutionException {
+
+		return this.getValue(o, q);
+
+	}
+
+	public String toString() {
+
+		StringBuffer buf = new StringBuffer();
+
+		buf.append("@");
+		buf.append(this.name);
+
+		if (this.acc != null) {
+
+			buf.append(".");
+			buf.append(this.acc);
+
+		}
+
+		if (this.isBracketed()) {
+
+			buf.insert(0, "(");
+			buf.append(")");
+
+		}
+
+		return buf.toString();
+
+	}
+
+	public boolean hasFixedResult(Query q) {
+
+		// A save value cannot have a fixed result.
+		return false;
+
+	}
 
 }

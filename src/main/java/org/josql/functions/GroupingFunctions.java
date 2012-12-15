@@ -29,1367 +29,1119 @@ import org.josql.expressions.Expression;
 
 import org.josql.Query;
 
-public class GroupingFunctions extends AbstractFunctionHandler
-{
+public class GroupingFunctions extends AbstractFunctionHandler {
 
-    public static final String VALUE = "value";
+	public static final String VALUE = "value";
 
-    public static final String HANDLER_ID = "_internal_grouping";
+	public static final String HANDLER_ID = "_internal_grouping";
 
-    public Object least (List       allobjs,
-			 Expression exp,
-			 String     saveValueName)
-                         throws     QueryExecutionException
-    {
+	public Object least(List allobjs, Expression exp, String saveValueName)
+	        throws QueryExecutionException {
 
-	if (saveValueName != null)
-	{
+		if (saveValueName != null) {
 
-	    Object o = this.q.getSaveValue (saveValueName);
+			Object o = this.q.getSaveValue(saveValueName);
 
-	    if (o != null)
-	    {
+			if (o != null) {
 
-		return o;
+				return o;
 
-	    }
-
-	}
-
-	if (allobjs.size () == 0)
-	{
-
-	    return null;
-
-	}
-
-	Object currObj = this.q.getCurrentObject ();
-
-	Object g = null;
-
-	int s = allobjs.size ();
-
-	for (int i = 0; i < s; i++)
-	{
-
-	    Object o = allobjs.get (i);
-
-	    this.q.setCurrentObject (o);
-
-	    Object v = null;
-
-	    try
-	    {
-
-		v = exp.getValue (o,
-				  this.q);
-
-	    } catch (Exception e) {
-
-                this.q.setCurrentObject (currObj);
-
-		throw new QueryExecutionException ("Unable to get value from expression: " + 
-						   exp +
-						   " for maximum value" +
-						   e);
-
-	    }	    
-
-	    if (g == null)
-	    {
-
-		g = v;
-
-	    } else {
-
-		int c = Utilities.compare (v,
-					   g);
-
-		if (c < 0)
-		{
-
-		    g = v;
+			}
 
 		}
 
-	    }
+		if (allobjs.size() == 0) {
 
-	}
-
-	if ((saveValueName != null)
-	    &&
-	    (q != null)
-	   )
-	{
-
-	    q.setSaveValue (saveValueName,
-			    g);
-
-	}
-
-	this.q.setCurrentObject (currObj);
-
-	return g;
-
-    }
-
-    public Object minObject (Expression exp)
-	                     throws     QueryExecutionException
-    {
-
-	return this.minObject ((List) this.q.getVariable (Query.ALL_OBJS_VAR_NAME),
-			       exp);
-
-    }    
-
-    public Object minObject (List       allobjs,
-			     Expression exp)
-                             throws     QueryExecutionException
-    {
-
-	return this.leastObject (allobjs,
-				 exp);
-
-    }
-
-    public Object leastObject (List       allobjs,
-			       Expression exp)
-                               throws     QueryExecutionException
-    {
-
-	if (allobjs.size () == 0)
-	{
-
-	    return null;
-
-	}
-
-	Object currObj = this.q.getCurrentObject ();
-
-	Object l = null;
-	Object lo = null;
-
-	int s = allobjs.size ();
-
-	for (int i = 0; i < s; i++)
-	{
-
-	    Object o = allobjs.get (i);
-
-	    this.q.setCurrentObject (o);
-
-	    Object v = null;
-
-	    try
-	    {
-
-		v = exp.getValue (o,
-				  this.q);
-
-	    } catch (Exception e) {
-
-                this.q.setCurrentObject (currObj);
-
-		throw new QueryExecutionException ("Unable to get value from expression: " + 
-						   exp +
-						   " for maximum value" +
-						   e);
-
-	    }	    
-
-	    if (l == null)
-	    {
-
-		l = v;
-		lo = o;
-
-	    } else {
-
-		int c = Utilities.compare (v,
-					   l);
-
-		if (c < 0)
-		{
-
-		    l = v;
-		    lo = o;
+			return null;
 
 		}
 
-	    }
+		Object currObj = this.q.getCurrentObject();
 
-	}
+		Object g = null;
 
-	this.q.setCurrentObject (currObj);
+		int s = allobjs.size();
 
-	return lo;
+		for (int i = 0; i < s; i++) {
 
-    }
+			Object o = allobjs.get(i);
 
-    public Object maxObject (List       allobjs,
-			     Expression exp)
-                             throws     QueryExecutionException
-    {
+			this.q.setCurrentObject(o);
 
-	return this.greatestObject (allobjs,
-				    exp);
+			Object v = null;
 
-    }
+			try {
 
-    public Object maxObject (Expression exp)
-	                     throws     QueryExecutionException
-    {
+				v = exp.getValue(o, this.q);
 
-	return this.maxObject ((List) this.q.getVariable (Query.ALL_OBJS_VAR_NAME),
-			       exp);
+			} catch (Exception e) {
 
-    }    
+				this.q.setCurrentObject(currObj);
 
-    public Object greatestObject (List       allobjs,
-				  Expression exp)
-                                  throws     QueryExecutionException
-    {
+				throw new QueryExecutionException(
+				        "Unable to get value from expression: " + exp
+				                + " for maximum value" + e);
 
-	if (allobjs.size () == 0)
-	{
+			}
 
-	    return null;
+			if (g == null) {
 
-	}
+				g = v;
 
-	Object currObj = this.q.getCurrentObject ();
+			} else {
 
-	Object g = null;
-	Object go = null;
+				int c = Utilities.compare(v, g);
 
-	int s = allobjs.size ();
+				if (c < 0) {
 
-	for (int i = 0; i < s; i++)
-	{
+					g = v;
 
-	    Object o = allobjs.get (i);
+				}
 
-            this.q.setCurrentObject (o);
-
-	    Object v = null;
-
-	    try
-	    {
-
-		v = exp.getValue (o,
-				  this.q);
-
-	    } catch (Exception e) {
-
-                this.q.setCurrentObject (currObj);
-
-		throw new QueryExecutionException ("Unable to get value from expression: " + 
-						   exp +
-						   " for maximum value" +
-						   e);
-
-	    }	    
-
-	    if (g == null)
-	    {
-
-		g = v;
-		go = o;
-
-	    } else {
-
-		int c = Utilities.compare (v,
-					   g);
-
-		if (c > 0)
-		{
-
-		    g = v;
-		    go = o;
+			}
 
 		}
 
-	    }
+		if ((saveValueName != null) && (q != null)) {
 
-	}
-
-	this.q.setCurrentObject (currObj);
-
-	return go;
-
-    }
-
-    public Object least (List       allobjs,
-			 Expression exp)
-                         throws     QueryExecutionException
-    {
-
-	return this.least (allobjs,
-			   exp,
-			   null);
-
-    }
-
-    public Object min (Expression exp)
-	               throws     QueryExecutionException
-    {
-
-	return this.min ((List) this.q.getVariable (Query.ALL_OBJS_VAR_NAME),
-			 exp);
-
-    }    
-
-    public Object min (List       allobjs,
-		       Expression exp)
-                       throws     QueryExecutionException
-    {
-
-	return this.least (allobjs,
-			   exp,
-			   null);
-
-    }
-
-    public Object min (List       allobjs,
-		       Expression exp,
-		       String     saveValueName)
-                       throws     QueryExecutionException
-    {
-
-	return this.least (allobjs,
-			   exp,
-			   saveValueName);
-
-    }
-
-    public Map.Entry maxEntry (Map    m,
-			       String type)
-    {
-
-	int t = 0;
-
-	if (type.equals (GroupingFunctions.VALUE))
-	{
-
-	    t = 1;
-
-	}
-
-	Map.Entry r = null;
-	Map.Entry le = null;
-
-	Iterator iter = m.entrySet ().iterator ();
-
-	while (iter.hasNext ())
-	{
-
-	    r = (Map.Entry) iter.next ();
-
-	    if (le != null)
-	    {
-
-		if (t == 0)
-		{
-
-		    if (Utilities.isGTEquals (r.getKey (),
-					      le.getKey ()))
-		    {
-
-			le = r;
-
-		    }
-
-		} else {
-
-		    if (Utilities.isGTEquals (r.getValue (),
-					      le.getValue ()))
-		    {
-
-			le = r;
-
-		    }
+			q.setSaveValue(saveValueName, g);
 
 		}
 
-	    } else {
+		this.q.setCurrentObject(currObj);
 
-		le = r;
-
-	    }
+		return g;
 
 	}
 
-	return le;
+	public Object minObject(Expression exp) throws QueryExecutionException {
 
-    }
-
-    public Map.Entry minEntry (Object m,
-			       String type)
-	                       throws QueryExecutionException
-    {
-
-	if (!(m instanceof Map))
-	{
-
-	    throw new QueryExecutionException ("Only instances of: " +
-					       Map.class.getName () + 
-					       " are supported, passed: " +
-					       m.getClass ().getName ());
+		return this.minObject(
+		        (List) this.q.getVariable(Query.ALL_OBJS_VAR_NAME), exp);
 
 	}
 
-	return this.minEntry ((Map) m,
-			      type);
+	public Object minObject(List allobjs, Expression exp)
+	        throws QueryExecutionException {
 
-    }
-
-    public Map.Entry minEntry (Map    m,
-			       String type)
-    {
-
-	int t = 0;
-
-	if (type.equals (GroupingFunctions.VALUE))
-	{
-
-	    t = 1;
+		return this.leastObject(allobjs, exp);
 
 	}
 
-	Map.Entry r = null;
-	Map.Entry le = null;
+	public Object leastObject(List allobjs, Expression exp)
+	        throws QueryExecutionException {
 
-	Iterator iter = m.entrySet ().iterator ();
+		if (allobjs.size() == 0) {
 
-	while (iter.hasNext ())
-	{
-
-	    r = (Map.Entry) iter.next ();
-
-	    if (le != null)
-	    {
-
-		if (t == 0)
-		{
-
-		    if (Utilities.isLTEquals (r.getKey (),
-					      le.getKey ()))
-		    {
-
-			le = r;
-
-		    }
-
-		} else {
-
-		    if (Utilities.isLTEquals (r.getValue (),
-					      le.getValue ()))
-		    {
-
-			le = r;
-
-		    }
+			return null;
 
 		}
 
-	    } else {
+		Object currObj = this.q.getCurrentObject();
 
-		le = r;
+		Object l = null;
+		Object lo = null;
 
-	    }
+		int s = allobjs.size();
 
-	}
+		for (int i = 0; i < s; i++) {
 
-	return le;
+			Object o = allobjs.get(i);
 
-    }
+			this.q.setCurrentObject(o);
 
-    public Object max (List       allobjs,
-		       Expression exp,
-		       String     saveValueName)
-                       throws     QueryExecutionException
-    {
+			Object v = null;
 
-	return this.greatest (allobjs,
-			      exp,
-			      saveValueName);
+			try {
 
-    }
+				v = exp.getValue(o, this.q);
 
-    public Object greatest (List       allobjs,
-			    Expression exp,
-			    String     saveValueName)
-                            throws     QueryExecutionException
-    {
+			} catch (Exception e) {
 
-	if (saveValueName != null)
-	{
+				this.q.setCurrentObject(currObj);
 
-	    Object o = this.q.getSaveValue (saveValueName);
+				throw new QueryExecutionException(
+				        "Unable to get value from expression: " + exp
+				                + " for maximum value" + e);
 
-	    if (o != null)
-	    {
+			}
 
-		return (Double) o;
+			if (l == null) {
 
-	    }
+				l = v;
+				lo = o;
 
-	}
+			} else {
 
-	if (allobjs.size () == 0)
-	{
+				int c = Utilities.compare(v, l);
 
-	    return null;
+				if (c < 0) {
 
-	}
+					l = v;
+					lo = o;
 
-	Object currObj = this.q.getCurrentObject ();
+				}
 
-	Object g = null;
-
-	int s = allobjs.size ();
-
-	for (int i = 0; i < s; i++)
-	{
-
-	    Object o = allobjs.get (i);
-
-	    this.q.setCurrentObject (o);
-
-	    Object v = null;
-
-	    try
-	    {
-
-		v = exp.getValue (o,
-				  this.q);
-
-	    } catch (Exception e) {
-
-                this.q.setCurrentObject (currObj);
-
-		throw new QueryExecutionException ("Unable to get value from expression: " + 
-						   exp +
-						   " for maximum value" +
-						   e);
-
-	    }	    
-
-	    if (g == null)
-	    {
-
-		g = v;
-
-	    } else {
-
-		int c = Utilities.compare (v,
-					   g);
-
-		if (c > 0)
-		{
-
-		    g = v;
+			}
 
 		}
 
-	    }
+		this.q.setCurrentObject(currObj);
+
+		return lo;
 
 	}
 
-	if (saveValueName != null)
-	{
+	public Object maxObject(List allobjs, Expression exp)
+	        throws QueryExecutionException {
 
-	    this.q.setSaveValue (saveValueName,
-				 g);
-
-	}
-
-	this.q.setCurrentObject (currObj);
-
-	return g;
-
-    }
-
-    public Object greatest (List       allobjs,
-			    Expression exp)
-                            throws     QueryExecutionException
-    {
-
-	return this.greatest (allobjs,
-			      exp,
-			      null);
-
-    }
-
-    public Object max (Expression exp)
-	               throws     QueryExecutionException
-    {
-
-	return this.max ((List) this.q.getVariable (Query.ALL_OBJS_VAR_NAME),
-			 exp);
-
-    }    
-
-    public Object max (List       allobjs,
-		       Expression exp)
-                       throws     QueryExecutionException
-    {
-
-	return this.greatest (allobjs,
- 			      exp,
-			      null);
-
-    }
-
-    private double getTotal (List       allobjs,
-			     Expression exp)
-	                     throws     QueryExecutionException
-    {
-
-	Object currObj = this.q.getCurrentObject ();
-
-	double total = 0;
-
-	int size = allobjs.size ();
-
-	for (int i = 0; i < size; i++)
-	{
-
-	    Object o = allobjs.get (i);
-
-	    this.q.setCurrentObject (o);
-
-	    Number n = null;
-
-	    try
-	    {
-
-		n = (Number) exp.getValue (o,
-					   this.q);
-
-	    } catch (Exception e) {
-
-                this.q.setCurrentObject (currObj);
-
-		throw new QueryExecutionException ("Unable to get value from expression: " +
-						   exp + 
-						   " for item: " + 
-						   i +
-						   " from the list of objects.",
-						   e);
-
-	    }
-
-	    total += n.doubleValue ();
+		return this.greatestObject(allobjs, exp);
 
 	}
 
-	this.q.setCurrentObject (currObj);
+	public Object maxObject(Expression exp) throws QueryExecutionException {
 
-	return total;
-
-    }
-
-    public void checkType (Object     o,
-			   Class      expected,
-			   Expression exp)
-                           throws   QueryExecutionException
-    {
-
-	if (!expected.isInstance (o))
-	{
-
-	    throw new QueryExecutionException ("Expression: " + 
-					       exp +
-					       " returns type: " +
-					       o.getClass ().getName () + 
-					       " however must return instance of: " +
-					       expected.getName ());
+		return this.maxObject(
+		        (List) this.q.getVariable(Query.ALL_OBJS_VAR_NAME), exp);
 
 	}
 
-    }
+	public Object greatestObject(List allobjs, Expression exp)
+	        throws QueryExecutionException {
 
-    public Double sum (List       allobjs,
-                       Expression exp,
-                       String     saveValueName)
-                       throws     QueryExecutionException
-    {
+		if (allobjs.size() == 0) {
 
-	if (saveValueName != null)
-	{
-
-	    Object o = this.q.getSaveValue (saveValueName);
-
-	    if (o != null)
-	    {
-
-		return (Double) o;
-
-	    }
-
-	}
-
-	if ((allobjs == null)
-	    ||
-	    (allobjs.size () == 0)
-	   )
-	{
-
-	    return new Double (0);
-
-	}
-
-	double total = this.getTotal (allobjs,
-				      exp);
-
-	Double d = new Double (total);
-
-	if ((saveValueName != null)
-	    &&
-	    (q != null)
-	   )
-	{
-
-	    this.q.setSaveValue (saveValueName,
-				 d);
-
-	}
-
-	return d;
-
-    }
-
-    public Double sum (Expression exp)
-	               throws     QueryExecutionException
-    {
-
-	return this.sum ((List) this.q.getAllObjects (),
-			 exp);
-
-    }    
-
-    public Double sum (List       objs,
-		       Expression exp)
-	               throws     QueryExecutionException
-    {
-
-	Class c = null;
-
-	try
-	{
-
-	    c = exp.getExpectedReturnType (this.q);
-
-	} catch (Exception e) {
-
-	    throw new QueryExecutionException ("Unable to determine expected return type for expression: " +
-					       exp,
-					       e);
-
-	}
-
-	boolean dyn = false;
-
-	if (!c.getName ().equals (Object.class.getName ()))
-	{
-
-	    // Should return a number...
-	    if (!Utilities.isNumber (c))
-	    {
-
-		throw new QueryExecutionException ("This function expects the expression: " +
-						   exp +
-						   " to return a number (sub-class of: " +
-						   Number.class.getName () + 
-						   ") but evaluation of the expression will return an instance of: " +
-						   c.getName ());
-
-	    }
-
-	} else {
-
-	    dyn = true;
-
-	}
-
-	Object co = this.q.getCurrentObject ();
-	List allobjs = this.q.getAllObjects ();
-
-        this.q.setAllObjects (objs);
-
-	int s = objs.size () - 1;
-
-	double d = 0;
-
-	for (int i = s; i > -1; i--)
-	{
-
-	    Object o = objs.get (i);
-
-	    this.q.setCurrentObject (o);
-
-	    Object v = null;
-
-	    try
-	    {
-
-		v = exp.getValue (o,
-				  this.q);
-
-	    } catch (Exception e) {
-
-                this.q.setCurrentObject (co);
-                this.q.setAllObjects (allobjs);
-
-		throw new QueryExecutionException ("Unable to evaluate expression: " + 
-						   exp + 
-						   " on item: " + 
-						   i,
-						   e);
-
-	    }
-
-	    if (v == null)
-	    {
-
-		// Skip... i.e. assume it's zero.
-		continue;
-
-	    }
-
-	    if (dyn)
-	    {
-
-		if (!(Utilities.isNumber (v)))
-		{
-
-                    this.q.setCurrentObject (co);
-                    this.q.setAllObjects (allobjs);
-
-		    throw new QueryExecutionException ("Expected expression: " +
-						       exp +
-						       " to return a number (sub-class of: " +
-						       Number.class.getName () + 
-						       ") but returns instance of: " +
-						       o.getClass ().getName () + 
-						       " for item: " +
-						       i + 
-						       " (class: " +
-						       v.getClass ().getName () +
-						       ")");
+			return null;
 
 		}
 
-	    }
+		Object currObj = this.q.getCurrentObject();
 
-	    d += ((Number) v).doubleValue ();
+		Object g = null;
+		Object go = null;
 
-	}
+		int s = allobjs.size();
 
-	this.q.setCurrentObject (co);
-        this.q.setAllObjects (allobjs);
+		for (int i = 0; i < s; i++) {
 
-	return new Double (d);
+			Object o = allobjs.get(i);
 
-    }
+			this.q.setCurrentObject(o);
 
-    /**
-     * This function allows you to specify your own accessor as a string that will
-     * be used to access the relevant value for each of the objects in the <b>objs</b>
-     * List.  
-     *
-     * @param objs The List of objects you wish to sum over.
-     * @param acc The accessor to create for accessing the value in each of the objects in <b>objs</b>.
-     * @return The summed value.
-     * @throws QueryExecutionException If the accessor is not valid for the objects in the list or
-     *                                 if the accessor throws an exception.
-     */
-    public Double sum (List   objs,
-		       String acc)
-	               throws QueryExecutionException
-    {
+			Object v = null;
 
-	if ((objs == null)
-	    ||
-	    (objs.size () == 0)
-	   )
-	{
+			try {
 
-	    return new Double (0);
+				v = exp.getValue(o, this.q);
 
-	}
+			} catch (Exception e) {
 
-	// Get the first object.
-	Object o = objs.get (0);
+				this.q.setCurrentObject(currObj);
 
-	Getter get = null;
+				throw new QueryExecutionException(
+				        "Unable to get value from expression: " + exp
+				                + " for maximum value" + e);
 
-	try
-	{
+			}
 
-	    get = new Getter (acc,
-			      o.getClass ());
+			if (g == null) {
 
-	} catch (Exception e) {
+				g = v;
+				go = o;
 
-	    throw new QueryExecutionException ("Unable to create accessor for: " +
-					       acc +
-					       " with class: " +
-					       o.getClass ().getName (),
-					       e);
+			} else {
+
+				int c = Utilities.compare(v, g);
+
+				if (c > 0) {
+
+					g = v;
+					go = o;
+
+				}
+
+			}
+
+		}
+
+		this.q.setCurrentObject(currObj);
+
+		return go;
 
 	}
 
-	if (!get.getType ().getName ().equals (Object.class.getName ()))
-	{
+	public Object least(List allobjs, Expression exp)
+	        throws QueryExecutionException {
 
-	    // Should return a number...
-	    if (!Utilities.isNumber (get.getType ()))
-	    {
-
-		throw new QueryExecutionException ("This function expects the accessor (second parm): " +
-						   acc +
-						   " to return a number (sub-class of: " +
-						   Number.class.getName () + 
-						   ") but evaluation of the accessor will return an instance of: " +
-						   get.getType ().getName ());
-
-	    }
+		return this.least(allobjs, exp, null);
 
 	}
 
-	int s = objs.size () - 1;
+	public Object min(Expression exp) throws QueryExecutionException {
 
-        Object currobj = this.q.getCurrentObject ();
-        List allobjs = this.q.getAllObjects ();
-
-        this.q.setAllObjects (objs);
-
-	double d = 0;
-
-	for (int i = s; i > -1; i--)
-	{
-
-	    o = objs.get (i);
-
-            this.q.setCurrentObject (o);
-
-	    Object v = null;
-
-	    try
-	    {
-
-		v = get.getValue (o);
-
-	    } catch (Exception e) {
-
-                this.q.setCurrentObject (currobj);
-                this.q.setAllObjects (allobjs);
-
-		throw new QueryExecutionException ("Unable to evaluate accessor: " + 
-						   acc + 
-						   " on item: " + 
-						   i,
-						   e);
-
-	    }
-
-	    if (v == null)
-	    {
-
-		// Skip... i.e. assume it's zero.
-		continue;
-
-	    }
-
-	    d += ((Number) v).doubleValue ();
+		return this
+		        .min((List) this.q.getVariable(Query.ALL_OBJS_VAR_NAME), exp);
 
 	}
 
-        this.q.setCurrentObject (currobj);
-        this.q.setAllObjects (allobjs);
+	public Object min(List allobjs, Expression exp)
+	        throws QueryExecutionException {
 
-	return new Double (d);
-
-    }
-
-    public String concat (List     allobjs,
-			  Expression exp,
-			  String     sep,
-			  String     saveValueName)
-                          throws     QueryExecutionException
-    {
-
-	if (saveValueName != null)
-	{
-
-	    Object o = this.q.getSaveValue (saveValueName);
-
-	    if (o != null)
-	    {
-
-		return (String) o;
-
-	    }
+		return this.least(allobjs, exp, null);
 
 	}
 
-	StringBuffer buf = new StringBuffer ();
+	public Object min(List allobjs, Expression exp, String saveValueName)
+	        throws QueryExecutionException {
 
-	int size = allobjs.size ();
-	int size1 = size - 1;
-
-	Object currObj = this.q.getCurrentObject ();
-        List currall = this.q.getAllObjects ();
-        
-        this.q.setAllObjects (allobjs);
-
-	for (int i = 0; i < size; i++)
-	{
-
-	    Object o = allobjs.get (i);
-
-	    this.q.setCurrentObject (o);
-
-	    Object v = null;
-
-	    try
-	    {
-
-		v = exp.getValue (o,
-				  this.q);
-
-	    } catch (Exception e) {
-
-                this.q.setCurrentObject (currObj);
-                this.q.setAllObjects (currall);
-
-		throw new QueryExecutionException ("Unable to get value from expression: " +
-						   exp + 
-						   " for item: " + 
-						   i +
-						   " from the list of objects.",
-						   e);
-
-	    }
-
-	    buf.append (v);
-
-	    if ((sep != null)
-		&&
-		(i < size1)
-	       )
-	    {
-
-		buf.append (sep);
-
-	    }
+		return this.least(allobjs, exp, saveValueName);
 
 	}
 
-	String r = buf.toString ();
+	public Map.Entry maxEntry(Map m, String type) {
 
-	if ((saveValueName != null)
-	    &&
-	    (q != null)
-	   )
-	{
+		int t = 0;
 
-	    q.setSaveValue (saveValueName,
-			    r);
+		if (type.equals(GroupingFunctions.VALUE)) {
 
-	}
+			t = 1;
 
-	this.q.setCurrentObject (currObj);
-        this.q.setAllObjects (currall);
+		}
 
-	return r;
+		Map.Entry r = null;
+		Map.Entry le = null;
 
-    }
+		Iterator iter = m.entrySet().iterator();
 
-    public String concat (List       allobjs,
-                          Expression exp,
-			  String     sep)
-                          throws     QueryExecutionException
-    {
+		while (iter.hasNext()) {
 
-	return this.concat (allobjs,
-			    exp,
-			    sep,
-			    null);
+			r = (Map.Entry) iter.next();
 
-    }
+			if (le != null) {
 
-    public String concat (Expression exp)
-	                  throws     QueryExecutionException
-    {
+				if (t == 0) {
 
-	return this.concat ((List) this.q.getVariable (Query.ALL_OBJS_VAR_NAME),
-			    exp);
+					if (Utilities.isGTEquals(r.getKey(), le.getKey())) {
 
-    }    
+						le = r;
 
-    public String concat (List       allobjs,
-                          Expression exp)
-                          throws     QueryExecutionException
-    {
+					}
 
-	return this.concat (allobjs,
-			    exp,
-			    null,
-			    null);
+				} else {
 
-    }
+					if (Utilities.isGTEquals(r.getValue(), le.getValue())) {
 
-    public Double avg (List       allobjs,
-                       Expression exp,
-                       String     saveValueName)
-                       throws     QueryExecutionException
-    {
+						le = r;
 
-	if (saveValueName != null)
-	{
+					}
 
-	    Object o = this.q.getSaveValue (saveValueName);
+				}
 
-	    if (o != null)
-	    {
+			} else {
 
-		return (Double) o;
+				le = r;
 
-	    }
+			}
+
+		}
+
+		return le;
 
 	}
 
-	if ((allobjs == null)
-	    ||
-	    (allobjs.size () == 0)
-	   )
-	{
+	public Map.Entry minEntry(Object m, String type)
+	        throws QueryExecutionException {
 
-	    return new Double (0);
+		if (!(m instanceof Map)) {
 
-	}
+			throw new QueryExecutionException("Only instances of: "
+			        + Map.class.getName() + " are supported, passed: "
+			        + m.getClass().getName());
 
-	double total = this.getTotal (allobjs,
-				      exp);
+		}
 
-	double avg = total / allobjs.size ();
-
-	Double d = new Double (avg);
-
-	if (saveValueName != null)
-	{
-
-	    q.setSaveValue (saveValueName,
-			    d);
+		return this.minEntry((Map) m, type);
 
 	}
 
-	return d;
+	public Map.Entry minEntry(Map m, String type) {
 
-    }
+		int t = 0;
 
-    public Double avg (Expression exp)
-	               throws     QueryExecutionException
-    {
+		if (type.equals(GroupingFunctions.VALUE)) {
 
-	return this.avg ((List) this.q.getVariable (Query.ALL_OBJS_VAR_NAME),
-			 exp);
+			t = 1;
 
-    }    
+		}
 
-    public Double avg (List       allobjs,
-                       Expression exp)
-                       throws     QueryExecutionException
-    {
+		Map.Entry r = null;
+		Map.Entry le = null;
 
-	return this.avg (allobjs,
-			 exp,
-			 null);
+		Iterator iter = m.entrySet().iterator();
 
-    }
+		while (iter.hasNext()) {
 
-    /**
-     * A function that will take each item from the passed in List and
-     * determine a "count" for each item, i.e. how many times each item appears.
-     *
-     * @param objs The List of objects to operate on.
-     * @return A Map of object to a count of the number of times the object appears in the list.
-     * @throws QueryExecutionException Won't happen in this method.
-     */
-    public Map occurrence (List   objs)
-	                   throws QueryExecutionException
-    {
+			r = (Map.Entry) iter.next();
 
-	return this.occurrence (objs,
-				null);
+			if (le != null) {
 
-    }
+				if (t == 0) {
 
-    /*
-    public Map occurrence (Expression exp)
-	                   throws     QueryExecutionException
-    {
+					if (Utilities.isLTEquals(r.getKey(), le.getKey())) {
 
-	return this.occurrence ((List) this.q.getVariable (Query.ALL_OBJS_VAR_NAME),
-				exp);
+						le = r;
 
-    }    
-    */
+					}
 
-    /**
-     * A function that will take each item from the passed in List and
-     * determine a "count" for each item, i.e. how many times each item appears.
-     *
-     * @param objs The List of objects to operate on.
-     * @param exp An optional expression that should be performed on each object
-     *            and the value returned used instead.
-     * @return A Map of object to a count of the number of times the object appears in the list.
-     * @throws QueryExecutionException If the expression cannot be evaluated.
-     */
-    public Map occurrence (List       objs,
-			   Expression exp)
-	                   throws     QueryExecutionException
-    {
+				} else {
 
-	Map occs = new HashMap ();
+					if (Utilities.isLTEquals(r.getValue(), le.getValue())) {
 
-	if (objs == null)
-	{
+						le = r;
 
-	    return occs;
+					}
+
+				}
+
+			} else {
+
+				le = r;
+
+			}
+
+		}
+
+		return le;
 
 	}
 
-	Object currObj = this.q.getCurrentObject ();
-        List currAll = this.q.getAllObjects ();
-        
-        this.q.setAllObjects (objs);
+	public Object max(List allobjs, Expression exp, String saveValueName)
+	        throws QueryExecutionException {
 
-	int s = objs.size ();
+		return this.greatest(allobjs, exp, saveValueName);
 
-	for (int i = 0; i < s; i++)
-	{
+	}
 
-	    Object o = objs.get (i);
+	public Object greatest(List allobjs, Expression exp, String saveValueName)
+	        throws QueryExecutionException {
 
-	    this.q.setCurrentObject (o);
+		if (saveValueName != null) {
 
-	    if (exp != null)
-	    {
+			Object o = this.q.getSaveValue(saveValueName);
 
-		try
-		{
+			if (o != null) {
 
-		    o = exp.getValue (o,
-				      this.q);
+				return (Double) o;
+
+			}
+
+		}
+
+		if (allobjs.size() == 0) {
+
+			return null;
+
+		}
+
+		Object currObj = this.q.getCurrentObject();
+
+		Object g = null;
+
+		int s = allobjs.size();
+
+		for (int i = 0; i < s; i++) {
+
+			Object o = allobjs.get(i);
+
+			this.q.setCurrentObject(o);
+
+			Object v = null;
+
+			try {
+
+				v = exp.getValue(o, this.q);
+
+			} catch (Exception e) {
+
+				this.q.setCurrentObject(currObj);
+
+				throw new QueryExecutionException(
+				        "Unable to get value from expression: " + exp
+				                + " for maximum value" + e);
+
+			}
+
+			if (g == null) {
+
+				g = v;
+
+			} else {
+
+				int c = Utilities.compare(v, g);
+
+				if (c > 0) {
+
+					g = v;
+
+				}
+
+			}
+
+		}
+
+		if (saveValueName != null) {
+
+			this.q.setSaveValue(saveValueName, g);
+
+		}
+
+		this.q.setCurrentObject(currObj);
+
+		return g;
+
+	}
+
+	public Object greatest(List allobjs, Expression exp)
+	        throws QueryExecutionException {
+
+		return this.greatest(allobjs, exp, null);
+
+	}
+
+	public Object max(Expression exp) throws QueryExecutionException {
+
+		return this
+		        .max((List) this.q.getVariable(Query.ALL_OBJS_VAR_NAME), exp);
+
+	}
+
+	public Object max(List allobjs, Expression exp)
+	        throws QueryExecutionException {
+
+		return this.greatest(allobjs, exp, null);
+
+	}
+
+	private double getTotal(List allobjs, Expression exp)
+	        throws QueryExecutionException {
+
+		Object currObj = this.q.getCurrentObject();
+
+		double total = 0;
+
+		int size = allobjs.size();
+
+		for (int i = 0; i < size; i++) {
+
+			Object o = allobjs.get(i);
+
+			this.q.setCurrentObject(o);
+
+			Number n = null;
+
+			try {
+
+				n = (Number) exp.getValue(o, this.q);
+
+			} catch (Exception e) {
+
+				this.q.setCurrentObject(currObj);
+
+				throw new QueryExecutionException(
+				        "Unable to get value from expression: " + exp
+				                + " for item: " + i
+				                + " from the list of objects.", e);
+
+			}
+
+			total += n.doubleValue();
+
+		}
+
+		this.q.setCurrentObject(currObj);
+
+		return total;
+
+	}
+
+	public void checkType(Object o, Class expected, Expression exp)
+	        throws QueryExecutionException {
+
+		if (!expected.isInstance(o)) {
+
+			throw new QueryExecutionException("Expression: " + exp
+			        + " returns type: " + o.getClass().getName()
+			        + " however must return instance of: " + expected.getName());
+
+		}
+
+	}
+
+	public Double sum(List allobjs, Expression exp, String saveValueName)
+	        throws QueryExecutionException {
+
+		if (saveValueName != null) {
+
+			Object o = this.q.getSaveValue(saveValueName);
+
+			if (o != null) {
+
+				return (Double) o;
+
+			}
+
+		}
+
+		if ((allobjs == null) || (allobjs.size() == 0)) {
+
+			return new Double(0);
+
+		}
+
+		double total = this.getTotal(allobjs, exp);
+
+		Double d = new Double(total);
+
+		if ((saveValueName != null) && (q != null)) {
+
+			this.q.setSaveValue(saveValueName, d);
+
+		}
+
+		return d;
+
+	}
+
+	public Double sum(Expression exp) throws QueryExecutionException {
+
+		return this.sum((List) this.q.getAllObjects(), exp);
+
+	}
+
+	public Double sum(List objs, Expression exp) throws QueryExecutionException {
+
+		Class c = null;
+
+		try {
+
+			c = exp.getExpectedReturnType(this.q);
 
 		} catch (Exception e) {
 
-                    this.q.setCurrentObject (currObj);
-                    this.q.setAllObjects (currAll);
-
-		    throw new QueryExecutionException ("Unable to get value for expression: " +
-						       exp + 
-						       " for object: " +
-						       i + 
-						       " from the list of objects.",
-						       e);
+			throw new QueryExecutionException(
+			        "Unable to determine expected return type for expression: "
+			                + exp, e);
 
 		}
 
-	    }
+		boolean dyn = false;
 
-	    Integer c = (Integer) occs.get (o);
+		if (!c.getName().equals(Object.class.getName())) {
 
-	    int co = 1;
+			// Should return a number...
+			if (!Utilities.isNumber(c)) {
 
-	    if (c != null)
-	    {
+				throw new QueryExecutionException(
+				        "This function expects the expression: "
+				                + exp
+				                + " to return a number (sub-class of: "
+				                + Number.class.getName()
+				                + ") but evaluation of the expression will return an instance of: "
+				                + c.getName());
 
-		co = c.intValue ();
+			}
 
-		co++;
+		} else {
 
-	    }
+			dyn = true;
 
-	    occs.put (o,
-		      Integer.valueOf (co));
+		}
+
+		Object co = this.q.getCurrentObject();
+		List allobjs = this.q.getAllObjects();
+
+		this.q.setAllObjects(objs);
+
+		int s = objs.size() - 1;
+
+		double d = 0;
+
+		for (int i = s; i > -1; i--) {
+
+			Object o = objs.get(i);
+
+			this.q.setCurrentObject(o);
+
+			Object v = null;
+
+			try {
+
+				v = exp.getValue(o, this.q);
+
+			} catch (Exception e) {
+
+				this.q.setCurrentObject(co);
+				this.q.setAllObjects(allobjs);
+
+				throw new QueryExecutionException(
+				        "Unable to evaluate expression: " + exp + " on item: "
+				                + i, e);
+
+			}
+
+			if (v == null) {
+
+				// Skip... i.e. assume it's zero.
+				continue;
+
+			}
+
+			if (dyn) {
+
+				if (!(Utilities.isNumber(v))) {
+
+					this.q.setCurrentObject(co);
+					this.q.setAllObjects(allobjs);
+
+					throw new QueryExecutionException("Expected expression: "
+					        + exp + " to return a number (sub-class of: "
+					        + Number.class.getName()
+					        + ") but returns instance of: "
+					        + o.getClass().getName() + " for item: " + i
+					        + " (class: " + v.getClass().getName() + ")");
+
+				}
+
+			}
+
+			d += ((Number) v).doubleValue();
+
+		}
+
+		this.q.setCurrentObject(co);
+		this.q.setAllObjects(allobjs);
+
+		return new Double(d);
 
 	}
 
-	this.q.setCurrentObject (currObj);
-        this.q.setAllObjects (currAll);
+	/**
+	 * This function allows you to specify your own accessor as a string that
+	 * will be used to access the relevant value for each of the objects in the
+	 * <b>objs</b> List.
+	 * 
+	 * @param objs
+	 *            The List of objects you wish to sum over.
+	 * @param acc
+	 *            The accessor to create for accessing the value in each of the
+	 *            objects in <b>objs</b>.
+	 * @return The summed value.
+	 * @throws QueryExecutionException
+	 *             If the accessor is not valid for the objects in the list or
+	 *             if the accessor throws an exception.
+	 */
+	public Double sum(List objs, String acc) throws QueryExecutionException {
 
-	return occs;
+		if ((objs == null) || (objs.size() == 0)) {
 
-    }
+			return new Double(0);
 
-    /**
-     * This is the same as {@link #occurrence(List,Expression)} except that the
-     * second expression should evaluate to a number that will be used to limit the
-     * results, the occurrence count must be greater than or equal to the value from
-     * the expression.
-     *
-     * @param objs The List of objects to operate on.
-     * @param exp An optional expression that should be performed on each object
-     *            and the value returned used instead.
-     * @param limitExp An expression that when evaluated should return a number, this
-     *                 will then be used to limit the results returned to those that have an
-     *                 occurrence count >= that number.  
-     * @return A Map of object to a count of the number of times the object appears in the list.
-     * @throws QueryExecutionException If the expression cannot be evaluated or the <b>limitExp</b>
-     *                                 arg does not evaulate to a number.
-     */
-    public Map occurrence (List       objs,
-			   Expression exp,
-			   Expression limitExp)
-	                   throws     QueryExecutionException
-    {
+		}
 
-	Map rs = this.occurrence (objs,
-				  exp);
+		// Get the first object.
+		Object o = objs.get(0);
 
-	// Evaluate the limit expression.
-	Object o = limitExp.getValue (this.q.getCurrentObject (),
-				      this.q);
+		Getter get = null;
 
-	if (!(o instanceof Number))
-	{
+		try {
 
-	    throw new QueryExecutionException ("Limit expression: " + 
-					       limitExp +
-					       " does not evaluate to a number");
+			get = new Getter(acc, o.getClass());
+
+		} catch (Exception e) {
+
+			throw new QueryExecutionException("Unable to create accessor for: "
+			        + acc + " with class: " + o.getClass().getName(), e);
+
+		}
+
+		if (!get.getType().getName().equals(Object.class.getName())) {
+
+			// Should return a number...
+			if (!Utilities.isNumber(get.getType())) {
+
+				throw new QueryExecutionException(
+				        "This function expects the accessor (second parm): "
+				                + acc
+				                + " to return a number (sub-class of: "
+				                + Number.class.getName()
+				                + ") but evaluation of the accessor will return an instance of: "
+				                + get.getType().getName());
+
+			}
+
+		}
+
+		int s = objs.size() - 1;
+
+		Object currobj = this.q.getCurrentObject();
+		List allobjs = this.q.getAllObjects();
+
+		this.q.setAllObjects(objs);
+
+		double d = 0;
+
+		for (int i = s; i > -1; i--) {
+
+			o = objs.get(i);
+
+			this.q.setCurrentObject(o);
+
+			Object v = null;
+
+			try {
+
+				v = get.getValue(o);
+
+			} catch (Exception e) {
+
+				this.q.setCurrentObject(currobj);
+				this.q.setAllObjects(allobjs);
+
+				throw new QueryExecutionException(
+				        "Unable to evaluate accessor: " + acc + " on item: "
+				                + i, e);
+
+			}
+
+			if (v == null) {
+
+				// Skip... i.e. assume it's zero.
+				continue;
+
+			}
+
+			d += ((Number) v).doubleValue();
+
+		}
+
+		this.q.setCurrentObject(currobj);
+		this.q.setAllObjects(allobjs);
+
+		return new Double(d);
 
 	}
 
-	int i = ((Number) o).intValue ();
+	public String concat(List allobjs, Expression exp, String sep,
+	        String saveValueName) throws QueryExecutionException {
 
-	Map ret = new HashMap ();
+		if (saveValueName != null) {
 
-	Iterator iter = rs.keySet ().iterator ();
+			Object o = this.q.getSaveValue(saveValueName);
 
-	while (iter.hasNext ())
-	{
+			if (o != null) {
 
-	    Object k = iter.next ();
+				return (String) o;
 
-	    Integer c = (Integer) rs.get (k);
+			}
 
-	    if (c.intValue () >= i)
-	    {
+		}
 
-		ret.put (k,
-			 c);
+		StringBuffer buf = new StringBuffer();
 
-	    }
+		int size = allobjs.size();
+		int size1 = size - 1;
+
+		Object currObj = this.q.getCurrentObject();
+		List currall = this.q.getAllObjects();
+
+		this.q.setAllObjects(allobjs);
+
+		for (int i = 0; i < size; i++) {
+
+			Object o = allobjs.get(i);
+
+			this.q.setCurrentObject(o);
+
+			Object v = null;
+
+			try {
+
+				v = exp.getValue(o, this.q);
+
+			} catch (Exception e) {
+
+				this.q.setCurrentObject(currObj);
+				this.q.setAllObjects(currall);
+
+				throw new QueryExecutionException(
+				        "Unable to get value from expression: " + exp
+				                + " for item: " + i
+				                + " from the list of objects.", e);
+
+			}
+
+			buf.append(v);
+
+			if ((sep != null) && (i < size1)) {
+
+				buf.append(sep);
+
+			}
+
+		}
+
+		String r = buf.toString();
+
+		if ((saveValueName != null) && (q != null)) {
+
+			q.setSaveValue(saveValueName, r);
+
+		}
+
+		this.q.setCurrentObject(currObj);
+		this.q.setAllObjects(currall);
+
+		return r;
 
 	}
 
-	return ret;
+	public String concat(List allobjs, Expression exp, String sep)
+	        throws QueryExecutionException {
 
-    }
+		return this.concat(allobjs, exp, sep, null);
+
+	}
+
+	public String concat(Expression exp) throws QueryExecutionException {
+
+		return this.concat((List) this.q.getVariable(Query.ALL_OBJS_VAR_NAME),
+		        exp);
+
+	}
+
+	public String concat(List allobjs, Expression exp)
+	        throws QueryExecutionException {
+
+		return this.concat(allobjs, exp, null, null);
+
+	}
+
+	public Double avg(List allobjs, Expression exp, String saveValueName)
+	        throws QueryExecutionException {
+
+		if (saveValueName != null) {
+
+			Object o = this.q.getSaveValue(saveValueName);
+
+			if (o != null) {
+
+				return (Double) o;
+
+			}
+
+		}
+
+		if ((allobjs == null) || (allobjs.size() == 0)) {
+
+			return new Double(0);
+
+		}
+
+		double total = this.getTotal(allobjs, exp);
+
+		double avg = total / allobjs.size();
+
+		Double d = new Double(avg);
+
+		if (saveValueName != null) {
+
+			q.setSaveValue(saveValueName, d);
+
+		}
+
+		return d;
+
+	}
+
+	public Double avg(Expression exp) throws QueryExecutionException {
+
+		return this
+		        .avg((List) this.q.getVariable(Query.ALL_OBJS_VAR_NAME), exp);
+
+	}
+
+	public Double avg(List allobjs, Expression exp)
+	        throws QueryExecutionException {
+
+		return this.avg(allobjs, exp, null);
+
+	}
+
+	/**
+	 * A function that will take each item from the passed in List and determine
+	 * a "count" for each item, i.e. how many times each item appears.
+	 * 
+	 * @param objs
+	 *            The List of objects to operate on.
+	 * @return A Map of object to a count of the number of times the object
+	 *         appears in the list.
+	 * @throws QueryExecutionException
+	 *             Won't happen in this method.
+	 */
+	public Map occurrence(List objs) throws QueryExecutionException {
+
+		return this.occurrence(objs, null);
+
+	}
+
+	/*
+	 * public Map occurrence (Expression exp) throws QueryExecutionException {
+	 * 
+	 * return this.occurrence ((List) this.q.getVariable
+	 * (Query.ALL_OBJS_VAR_NAME), exp);
+	 * 
+	 * }
+	 */
+
+	/**
+	 * A function that will take each item from the passed in List and determine
+	 * a "count" for each item, i.e. how many times each item appears.
+	 * 
+	 * @param objs
+	 *            The List of objects to operate on.
+	 * @param exp
+	 *            An optional expression that should be performed on each object
+	 *            and the value returned used instead.
+	 * @return A Map of object to a count of the number of times the object
+	 *         appears in the list.
+	 * @throws QueryExecutionException
+	 *             If the expression cannot be evaluated.
+	 */
+	public Map occurrence(List objs, Expression exp)
+	        throws QueryExecutionException {
+
+		Map occs = new HashMap();
+
+		if (objs == null) {
+
+			return occs;
+
+		}
+
+		Object currObj = this.q.getCurrentObject();
+		List currAll = this.q.getAllObjects();
+
+		this.q.setAllObjects(objs);
+
+		int s = objs.size();
+
+		for (int i = 0; i < s; i++) {
+
+			Object o = objs.get(i);
+
+			this.q.setCurrentObject(o);
+
+			if (exp != null) {
+
+				try {
+
+					o = exp.getValue(o, this.q);
+
+				} catch (Exception e) {
+
+					this.q.setCurrentObject(currObj);
+					this.q.setAllObjects(currAll);
+
+					throw new QueryExecutionException(
+					        "Unable to get value for expression: " + exp
+					                + " for object: " + i
+					                + " from the list of objects.", e);
+
+				}
+
+			}
+
+			Integer c = (Integer) occs.get(o);
+
+			int co = 1;
+
+			if (c != null) {
+
+				co = c.intValue();
+
+				co++;
+
+			}
+
+			occs.put(o, Integer.valueOf(co));
+
+		}
+
+		this.q.setCurrentObject(currObj);
+		this.q.setAllObjects(currAll);
+
+		return occs;
+
+	}
+
+	/**
+	 * This is the same as {@link #occurrence(List,Expression)} except that the
+	 * second expression should evaluate to a number that will be used to limit
+	 * the results, the occurrence count must be greater than or equal to the
+	 * value from the expression.
+	 * 
+	 * @param objs
+	 *            The List of objects to operate on.
+	 * @param exp
+	 *            An optional expression that should be performed on each object
+	 *            and the value returned used instead.
+	 * @param limitExp
+	 *            An expression that when evaluated should return a number, this
+	 *            will then be used to limit the results returned to those that
+	 *            have an occurrence count >= that number.
+	 * @return A Map of object to a count of the number of times the object
+	 *         appears in the list.
+	 * @throws QueryExecutionException
+	 *             If the expression cannot be evaluated or the <b>limitExp</b>
+	 *             arg does not evaulate to a number.
+	 */
+	public Map occurrence(List objs, Expression exp, Expression limitExp)
+	        throws QueryExecutionException {
+
+		Map rs = this.occurrence(objs, exp);
+
+		// Evaluate the limit expression.
+		Object o = limitExp.getValue(this.q.getCurrentObject(), this.q);
+
+		if (!(o instanceof Number)) {
+
+			throw new QueryExecutionException("Limit expression: " + limitExp
+			        + " does not evaluate to a number");
+
+		}
+
+		int i = ((Number) o).intValue();
+
+		Map ret = new HashMap();
+
+		Iterator iter = rs.keySet().iterator();
+
+		while (iter.hasNext()) {
+
+			Object k = iter.next();
+
+			Integer c = (Integer) rs.get(k);
+
+			if (c.intValue() >= i) {
+
+				ret.put(k, c);
+
+			}
+
+		}
+
+		return ret;
+
+	}
 
 }

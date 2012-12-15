@@ -100,8 +100,8 @@ public class BindVariable extends ValueExpression {
 	public static final String SPECIAL_NAME_PREFIX = "_";
 	private static Map SPECIAL_VAR_NAMES;
 	/**
-	 * init in {@link #init(Query)},use for optimize;
-	 * so {@link #getValue(Object, Query)}} can use this value to find the the value
+	 * init in {@link #init(Query)},use for optimize; so
+	 * {@link #getValue(Object, Query)} can use this value to find the the value
 	 */
 	private int bindVarType = Query.OTHER_VAR_TYPE;
 	static {
@@ -365,7 +365,7 @@ public class BindVariable extends ValueExpression {
 			}
 
 		}
-		//init bindVarType
+		// init bindVarType
 		this.bindVarType = q.getVarType(this.name);
 	}
 
@@ -427,8 +427,8 @@ public class BindVariable extends ValueExpression {
 			o = q.getGroupByVariable(this.groupByInd);
 
 		} else {
-			//use bindVarType to find value
-			o = q.getVariable(this.bindVarType,this.name);
+			// use bindVarType to find value
+			o = q.getVariable(this.bindVarType, this.name);
 
 		}
 

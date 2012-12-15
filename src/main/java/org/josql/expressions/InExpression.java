@@ -27,623 +27,488 @@ import org.josql.QueryParseException;
 import org.josql.internal.Utilities;
 
 /**
- * This class represents in [ NOT ] IN [ LIKE ] [ ALL ] expression.
- * If any of the values listed are Maps or Collections then they are iterated over to see if a match
- * is found.  For Maps only the key values are checked.  If you pass a list then it is iterated over
- * using a <code>for</code> construct rather than an Iterator since it's much faster.
+ * This class represents in [ NOT ] IN [ LIKE ] [ ALL ] expression. If any of
+ * the values listed are Maps or Collections then they are iterated over to see
+ * if a match is found. For Maps only the key values are checked. If you pass a
+ * list then it is iterated over using a <code>for</code> construct rather than
+ * an Iterator since it's much faster.
  * <p>
- * Note: due to the way that the expression is designed it is POSSIBLE to have a binary expression
- * in the in list, however at this time that is not supported since it can lead to an ambiguous result,
- * for example: <code>true IN (true, false)</code> has no sensible meaning.
+ * Note: due to the way that the expression is designed it is POSSIBLE to have a
+ * binary expression in the in list, however at this time that is not supported
+ * since it can lead to an ambiguous result, for example:
+ * <code>true IN (true, false)</code> has no sensible meaning.
  */
-public class InExpression extends BinaryExpression
-{
+public class InExpression extends BinaryExpression {
 
-    private List items = new ArrayList ();
-    private boolean not = false;
-    private boolean doLike = false;
-    private boolean all = false;
-    private boolean ignoreCase = false;
+	private List items = new ArrayList();
+	private boolean not = false;
+	private boolean doLike = false;
+	private boolean all = false;
+	private boolean ignoreCase = false;
 
-    /**
-     * Initialise the IN expression.  Init the LHS and then all of the values in the brackets.
-     * 
-     * @param q The Query object.
-     * @throws QueryParseException If something goes wrong with the init.
-     */
-    public void init (Query  q)
-	              throws QueryParseException
-    {
+	/**
+	 * Initialise the IN expression. Init the LHS and then all of the values in
+	 * the brackets.
+	 * 
+	 * @param q
+	 *            The Query object.
+	 * @throws QueryParseException
+	 *             If something goes wrong with the init.
+	 */
+	public void init(Query q) throws QueryParseException {
 
-	this.left.init (q);
+		this.left.init(q);
 
-	int s = this.items.size ();
+		int s = this.items.size();
 
-	for (int i = 0; i < s; i++)
-	{
+		for (int i = 0; i < s; i++) {
 
-	    Expression exp = (Expression) this.items.get (i);
+			Expression exp = (Expression) this.items.get(i);
 
-	    exp.init (q);
-
-	}
-
-    }
-
-    public void setIgnoreCase (boolean v)
-    {
-
-	this.ignoreCase = v;
-
-    }
-
-    public boolean isIgnoreCase ()
-    {
-
-	return this.ignoreCase;
-
-    }
-
-    public boolean isAll ()
-    {
-
-	return this.all;
-
-    }
-
-    public void setAll (boolean v)
-    {
-
-	this.all = v;
-
-    }
-
-    public boolean isDoLike ()
-    {
-
-	return this.doLike;
-
-    }
-
-    public void setDoLike (boolean d)
-    {
-
-	this.doLike = d;
-
-    }
-
-    public void setItems (List items)
-    {
-
-	this.items = items;
-
-    }
-
-    public List getItems ()
-    {
-
-	return this.items;
-
-    }
-
-    public void addItem (Expression e)
-    {
-
-	this.items.add (e);
-
-    }
-
-    public boolean isNot ()
-    {
-
-	return this.not;
-
-    }
-
-    public void setNot (boolean v)
-    {
-
-	this.not = v;
-
-    }
-
-    /**
-     * Return whether this expression evaulates to <code>true</code>.  If any of the values on RHS are Maps (keys 
-     * only) or Collections then they are iterated over and checked against the LHS.
-     *
-     * @param o The current object to perform the expression on.
-     * @param q The Query object.
-     * @return <code>true</code> if the LHS is "equal" (as determined by: {@link Utilities#isEquals(Object,Object)})
-     *         to any of the values in the brackets.  If this is a NOT expression then the result is negated.
-     * @throws QueryExecutionException If the expression cannot be evaluated.
-     */
-    public boolean isTrue (Object o,
-			   Query  q)
-	                   throws QueryExecutionException
-    {
-
-	// Get the LHS.
-	Object l = this.left.getValue (o,
-				       q);
-
-	String v = null;
-	String wc = String.valueOf (q.getWildcardCharacter ());
-
-	if (this.doLike)
-	{
-
-	    if (l != null)
-	    {
-
-		v = l.toString ();
-
-		if (this.ignoreCase)
-		{
-
-		    v = v.toLowerCase ();
+			exp.init(q);
 
 		}
 
-	    }
+	}
+
+	public void setIgnoreCase(boolean v) {
+
+		this.ignoreCase = v;
 
 	}
 
-	int count = 0;
+	public boolean isIgnoreCase() {
 
-	// Cycle over our items.
-	int s = this.items.size ();
+		return this.ignoreCase;
 
-	for (int i = 0; i < s; i++)
-	{
+	}
 
-	    Expression exp = (Expression) this.items.get (i);
+	public boolean isAll() {
 
-	    // Evaluate it.
-	    Object eo = exp.getValue (o,
-				      q);
+		return this.all;
 
-	    boolean eq = false;
-	    boolean proc = false;
+	}
 
-	    if (eo instanceof Collection)
-	    {
+	public void setAll(boolean v) {
 
-		Collection col = (Collection) eo;
+		this.all = v;
 
-		eq = this.compareCollection (l,
-					     col,
-					     v,
-					     wc);
-		proc = true;
+	}
 
-	    }
+	public boolean isDoLike() {
 
-	    if (eo instanceof Map)
-	    {
+		return this.doLike;
 
-		eq = this.compareMap (l,
-				      (Map) eo,
-				      v,
-				      wc);
-		proc = true;
+	}
 
-	    }
+	public void setDoLike(boolean d) {
 
-	    if (!proc)
-	    {
+		this.doLike = d;
 
-		// See if the objects are equivalent.
-		eq = this.compareItem (l,
-				       eo,
-				       v,
-				       wc);
+	}
 
-	    }
+	public void setItems(List items) {
 
-	    if (eq)
-	    {
+		this.items = items;
 
-		count++;
+	}
 
-		if (this.not)
-		{
+	public List getItems() {
 
-		    return false;
+		return this.items;
+
+	}
+
+	public void addItem(Expression e) {
+
+		this.items.add(e);
+
+	}
+
+	public boolean isNot() {
+
+		return this.not;
+
+	}
+
+	public void setNot(boolean v) {
+
+		this.not = v;
+
+	}
+
+	/**
+	 * Return whether this expression evaulates to <code>true</code>. If any of
+	 * the values on RHS are Maps (keys only) or Collections then they are
+	 * iterated over and checked against the LHS.
+	 * 
+	 * @param o
+	 *            The current object to perform the expression on.
+	 * @param q
+	 *            The Query object.
+	 * @return <code>true</code> if the LHS is "equal" (as determined by:
+	 *         {@link Utilities#isEquals(Object,Object)}) to any of the values
+	 *         in the brackets. If this is a NOT expression then the result is
+	 *         negated.
+	 * @throws QueryExecutionException
+	 *             If the expression cannot be evaluated.
+	 */
+	public boolean isTrue(Object o, Query q) throws QueryExecutionException {
+
+		// Get the LHS.
+		Object l = this.left.getValue(o, q);
+
+		String v = null;
+		String wc = String.valueOf(q.getWildcardCharacter());
+
+		if (this.doLike) {
+
+			if (l != null) {
+
+				v = l.toString();
+
+				if (this.ignoreCase) {
+
+					v = v.toLowerCase();
+
+				}
+
+			}
 
 		}
 
-		if (!this.all)
-		{
+		int count = 0;
 
-		    return true;
+		// Cycle over our items.
+		int s = this.items.size();
 
-		}
+		for (int i = 0; i < s; i++) {
 
-	    } 
+			Expression exp = (Expression) this.items.get(i);
 
-	}
+			// Evaluate it.
+			Object eo = exp.getValue(o, q);
 
-	if ((this.all)
-	    &&
-	    (!this.not)
-	    &&
-	    (count == s)
-	   )
-	{
+			boolean eq = false;
+			boolean proc = false;
 
-	    return true;
+			if (eo instanceof Collection) {
 
-	}
+				Collection col = (Collection) eo;
 
-	if ((this.all)
-	    &&
-	    (this.not)
-	    &&
-	    (count == 0)
-	   )
-	{
+				eq = this.compareCollection(l, col, v, wc);
+				proc = true;
 
-	    return true;
+			}
 
-	}
+			if (eo instanceof Map) {
 
-	if (this.not)
-	{
+				eq = this.compareMap(l, (Map) eo, v, wc);
+				proc = true;
 
-	    return true;
+			}
 
-	}
+			if (!proc) {
 
-	return false;
+				// See if the objects are equivalent.
+				eq = this.compareItem(l, eo, v, wc);
 
-    }
+			}
 
-    private boolean compareCollection (Object     o,
-				       Collection c,
-				       String     v,
-				       String     wc)
-    {
+			if (eq) {
 
-	if (c instanceof List)
-	{
+				count++;
 
-	    return this.compareList (o,
-				     (List) c,
-				     v,
-				     wc);
+				if (this.not) {
 
-	}
+					return false;
 
-	Iterator i = c.iterator ();
+				}
 
-	int count = 0;
+				if (!this.all) {
 
-	while (i.hasNext ())
-	{
+					return true;
 
-	    Object n = i.next ();
+				}
 
-	    if (this.compareItem (o,
-				  n,
-				  v,
-				  wc))
-	    {
-
-		count++;
-
-		if (!this.all)
-		{
-
-		    return true;
+			}
 
 		}
 
-	    }
+		if ((this.all) && (!this.not) && (count == s)) {
 
-	}
-
-	if ((this.all)
-	    &&
-	    (!this.not)
-	    &&
-	    (count == c.size ())
-	   )
-	{
-
-	    return true;
-
-	}
-
-	if ((this.all)
-	    &&
-	    (this.not)
-	    &&
-	    (count == 0)
-	   )
-	{
-
-	    return true;
-
-	}
-
-	return false;
-
-    }
-
-    private boolean compareList (Object o,
-				 List   l,
-				 String v,
-				 String wc)
-    {
-
-	int s = l.size ();
-
-	int count = 0;
-
-	for (int i = 0; i < s; i++) 
-	{
-
-	    Object n = l.get (i);
-
-	    if (this.compareItem (o,
-				  n,
-				  v,
-				  wc))
-	    {
-
-		count++;
-
-		if (!this.all)
-		{
-
-		    return true;
+			return true;
 
 		}
 
-	    }
+		if ((this.all) && (this.not) && (count == 0)) {
 
-	}
+			return true;
 
-	if ((this.all)
-	    &&
-	    (!this.not)
-	    &&
-	    (count == s)
-	   )
-	{
+		}
 
-	    return true;
+		if (this.not) {
 
-	}
+			return true;
 
-	if ((this.all)
-	    &&
-	    (this.not)
-	    &&
-	    (count == 0)
-	   )
-	{
-
-	    return true;
-
-	}
-
-	return false;
-
-    }
-
-    private boolean compareItem (Object o,
-				 Object n,
-				 String v,
-				 String wc)
-    {
-
-	boolean eq = true;
-
-	if (this.doLike)
-	{
-
-	    if ((v == null)
-		&&
-		(n == null)
-	       )
-	    {
-
-		return true;
-
-	    }
-
-	    if (n == null)
-	    {
+		}
 
 		return false;
 
-	    }
-
-	    String vn = n.toString ();
-
-	    if (this.ignoreCase)
-	    {
-
-		vn = vn.toLowerCase ();
-
-	    }
-
-	    List pat = Utilities.getLikePattern (vn,
-						 wc);
-
-	    eq = Utilities.matchLikePattern (pat,
-					     v);
-
-	} else {
-
-	    if (this.ignoreCase)
-	    {
-
-                if (o == null)
-                {
-                    
-                    return (n == null);
-                    
-                } else {
-                    
-                    if (n == null)
-                    {
-                        
-                        return false;
-                        
-                    }
-                    
-                }
-
-		return o.toString ().equalsIgnoreCase (n.toString ());
-
-	    }
-
-	    eq = Utilities.isEquals (o,
-				     n);
-
 	}
 
-	return eq;
+	private boolean compareCollection(Object o, Collection c, String v,
+	        String wc) {
 
-    }
+		if (c instanceof List) {
 
-    private boolean compareMap (Object o,
-				Map    m,
-				String v,
-				String wc)
-    {
-
-	Iterator i = m.keySet ().iterator ();
-
-	int count = 0;
-	
-	while (i.hasNext ())
-	{
-
-	    Object n = i.next ();
-
-	    if (this.compareItem (o,
-				  n,
-				  v,
-				  wc))
-	    {
-
-		count++;
-
-		if (!this.all)
-		{
-
-		    return true;
+			return this.compareList(o, (List) c, v, wc);
 
 		}
 
-	    }
+		Iterator i = c.iterator();
+
+		int count = 0;
+
+		while (i.hasNext()) {
+
+			Object n = i.next();
+
+			if (this.compareItem(o, n, v, wc)) {
+
+				count++;
+
+				if (!this.all) {
+
+					return true;
+
+				}
+
+			}
+
+		}
+
+		if ((this.all) && (!this.not) && (count == c.size())) {
+
+			return true;
+
+		}
+
+		if ((this.all) && (this.not) && (count == 0)) {
+
+			return true;
+
+		}
+
+		return false;
 
 	}
 
-	if ((this.all)
-	    &&
-	    (!this.not)
-	    &&
-	    (count == m.size ())
-	   )
-	{
+	private boolean compareList(Object o, List l, String v, String wc) {
 
-	    return true;
+		int s = l.size();
 
-	}
+		int count = 0;
 
-	if ((this.all)
-	    &&
-	    (this.not)
-	    &&
-	    (count == 0)
-	   )
-	{
+		for (int i = 0; i < s; i++) {
 
-	    return true;
+			Object n = l.get(i);
 
-	}
+			if (this.compareItem(o, n, v, wc)) {
 
-	return false;
+				count++;
 
-    }
+				if (!this.all) {
 
-    /**
-     * Return a string representation of this expression.
-     * In the form: {@link Expression#toString() Expression} [ NOT ] [$]IN [ LIKE ] [ ALL ]
-     * ( {@link Expression#toString() Expression} [ , {@link Expression#toString() Expression}* ] )
-     *
-     * @return A string representation of this expression.
-     */
-    public String toString ()
-    {
+					return true;
 
-	StringBuffer buf = new StringBuffer (this.left.toString ());
+				}
 
-	buf.append (" ");
+			}
 
-	if (this.isNot ())
-	{
+		}
 
-	    buf.append ("NOT ");
+		if ((this.all) && (!this.not) && (count == s)) {
+
+			return true;
+
+		}
+
+		if ((this.all) && (this.not) && (count == 0)) {
+
+			return true;
+
+		}
+
+		return false;
 
 	}
 
-	if (this.ignoreCase)
-	{
+	private boolean compareItem(Object o, Object n, String v, String wc) {
 
-	    buf.append ("$");
+		boolean eq = true;
+
+		if (this.doLike) {
+
+			if ((v == null) && (n == null)) {
+
+				return true;
+
+			}
+
+			if (n == null) {
+
+				return false;
+
+			}
+
+			String vn = n.toString();
+
+			if (this.ignoreCase) {
+
+				vn = vn.toLowerCase();
+
+			}
+
+			List pat = Utilities.getLikePattern(vn, wc);
+
+			eq = Utilities.matchLikePattern(pat, v);
+
+		} else {
+
+			if (this.ignoreCase) {
+
+				if (o == null) {
+
+					return (n == null);
+
+				} else {
+
+					if (n == null) {
+
+						return false;
+
+					}
+
+				}
+
+				return o.toString().equalsIgnoreCase(n.toString());
+
+			}
+
+			eq = Utilities.isEquals(o, n);
+
+		}
+
+		return eq;
 
 	}
 
-	buf.append ("IN ");
+	private boolean compareMap(Object o, Map m, String v, String wc) {
 
-	if (this.doLike)
-	{
+		Iterator i = m.keySet().iterator();
 
-	    buf.append ("LIKE ");
+		int count = 0;
 
-	}
+		while (i.hasNext()) {
 
-	if (this.all)
-	{
+			Object n = i.next();
 
-	    buf.append ("ALL ");
+			if (this.compareItem(o, n, v, wc)) {
 
-	}
+				count++;
 
-	buf.append ("(");
+				if (!this.all) {
 
-	for (int i = 0; i < this.items.size (); i++)
-	{
+					return true;
 
-	    buf.append (this.items.get (i));
+				}
 
-	    if (i < (this.items.size () - 1))
-	    {
+			}
 
-		buf.append (",");
+		}
 
-	    }
+		if ((this.all) && (!this.not) && (count == m.size())) {
 
-	}
+			return true;
 
-	buf.append (")");
+		}
 
-	if (this.isBracketed ())
-	{
+		if ((this.all) && (this.not) && (count == 0)) {
 
-	    buf.insert (0,
-			"(");
-	    buf.append (")");
+			return true;
+
+		}
+
+		return false;
 
 	}
 
-	return buf.toString ();
+	/**
+	 * Return a string representation of this expression. In the form:
+	 * {@link Expression#toString() Expression} [ NOT ] [$]IN [ LIKE ] [ ALL ] (
+	 * {@link Expression#toString() Expression} [ ,
+	 * {@link Expression#toString() Expression}* ] )
+	 * 
+	 * @return A string representation of this expression.
+	 */
+	public String toString() {
 
-    }
+		StringBuffer buf = new StringBuffer(this.left.toString());
+
+		buf.append(" ");
+
+		if (this.isNot()) {
+
+			buf.append("NOT ");
+
+		}
+
+		if (this.ignoreCase) {
+
+			buf.append("$");
+
+		}
+
+		buf.append("IN ");
+
+		if (this.doLike) {
+
+			buf.append("LIKE ");
+
+		}
+
+		if (this.all) {
+
+			buf.append("ALL ");
+
+		}
+
+		buf.append("(");
+
+		for (int i = 0; i < this.items.size(); i++) {
+
+			buf.append(this.items.get(i));
+
+			if (i < (this.items.size() - 1)) {
+
+				buf.append(",");
+
+			}
+
+		}
+
+		buf.append(")");
+
+		if (this.isBracketed()) {
+
+			buf.insert(0, "(");
+			buf.append(")");
+
+		}
+
+		return buf.toString();
+
+	}
 
 }

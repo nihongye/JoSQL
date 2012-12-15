@@ -17,21 +17,15 @@ package org.josql.expressions;
 import org.josql.Query;
 import org.josql.QueryExecutionException;
 
-public abstract class ValueExpression extends Expression
-{
+public abstract class ValueExpression extends Expression {
 
-    public Object getValue (Object o,
-			    Query  q)
-	                    throws QueryExecutionException
-    {
+	public Object getValue(Object o, Query q) throws QueryExecutionException {
 
-	return this.evaluate (o,
-			      q);
+		return this.evaluate(o, q);
 
-    }
+	}
 
-    public abstract Object evaluate (Object o,
-                                     Query  q)
-	                             throws QueryExecutionException;
+	public abstract Object evaluate(Object o, Query q)
+	        throws QueryExecutionException;
 
 }

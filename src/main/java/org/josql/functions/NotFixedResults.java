@@ -15,12 +15,11 @@
 package org.josql.functions;
 
 /**
- * A marker interface that tells JoSQL that any functions within a class implementing
- * this interface will NOT return fixed results for fixed inputs.
- *
+ * A marker interface that tells JoSQL that any functions within a class
+ * implementing this interface will NOT return fixed results for fixed inputs.
+ * 
  * See: http://josql.sourceforge.net/manual/functions.html
  */
-public interface NotFixedResults
-{
+public interface NotFixedResults {
 
 }

@@ -377,14 +377,14 @@ public class Function extends ValueExpression {
 		}
 
 		// Get the values for the parameters... if any...
-		
+
 		if (this.params != null) {
 			int s = this.params.size();
 			// to reuse,can reduce memory footprint
-			if(parameterValues == null){
+			if (parameterValues == null) {
 				parameterValues = new Object[s];
 			}
-			
+
 			for (int i = 0; i < s; i++) {
 
 				Expression exp = (Expression) this.params.get(i);
@@ -398,15 +398,15 @@ public class Function extends ValueExpression {
 
 					// Eval this expression.
 					try {
-						
+
 						parameterValues[i] = exp.getValue(o, q);
 
 					} catch (Exception e) {
 
 						throw new QueryExecutionException(
-								"Unable to get parameter: " + i + " (\""
-										+ exp.toString() + "\") for function: "
-										+ this.name, e);
+						        "Unable to get parameter: " + i + " (\""
+						                + exp.toString() + "\") for function: "
+						                + this.name, e);
 
 					}
 

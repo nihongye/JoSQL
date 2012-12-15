@@ -26,356 +26,295 @@ import com.gentlyweb.utils.Getter;
 import org.josql.Query;
 import org.josql.QueryExecutionException;
 
-public class FormattingFunctions extends AbstractFunctionHandler
-{
+public class FormattingFunctions extends AbstractFunctionHandler {
 
-    public static final String HANDLER_ID = "_internal_formatting";
+	public static final String HANDLER_ID = "_internal_formatting";
 
-    public static String DEFAULT_DATE_FORMAT_SPEC = "dd/MMM/yyyy";
-    public static String DEFAULT_DATE_TIME_FORMAT_SPEC = FormattingFunctions.DEFAULT_DATE_FORMAT_SPEC +
-                    	                                 ", hh:mm:ss";
-    public static String DEFAULT_DECIMAL_FORMAT_SPEC = "###,###,###.##";
-    
-    private SimpleDateFormat defSDF = new SimpleDateFormat (FormattingFunctions.DEFAULT_DATE_FORMAT_SPEC);
-    private SimpleDateFormat defSDTF = new SimpleDateFormat (FormattingFunctions.DEFAULT_DATE_TIME_FORMAT_SPEC);
+	public static String DEFAULT_DATE_FORMAT_SPEC = "dd/MMM/yyyy";
+	public static String DEFAULT_DATE_TIME_FORMAT_SPEC = FormattingFunctions.DEFAULT_DATE_FORMAT_SPEC
+	        + ", hh:mm:ss";
+	public static String DEFAULT_DECIMAL_FORMAT_SPEC = "###,###,###.##";
 
-    public String formatTimeDuration (Object o)
-	                              throws QueryExecutionException
-    {
+	private SimpleDateFormat defSDF = new SimpleDateFormat(
+	        FormattingFunctions.DEFAULT_DATE_FORMAT_SPEC);
+	private SimpleDateFormat defSDTF = new SimpleDateFormat(
+	        FormattingFunctions.DEFAULT_DATE_TIME_FORMAT_SPEC);
 
-	if (o instanceof Number)
-	{
+	public String formatTimeDuration(Object o) throws QueryExecutionException {
 
-	    return TimeDuration.getInstance (((Number) o).longValue ()).format ();
+		if (o instanceof Number) {
 
-	}
+			return TimeDuration.getInstance(((Number) o).longValue()).format();
 
-	if (o instanceof Date)
-	{
+		}
 
-	    return TimeDuration.getInstance ((Date) o).format ();
+		if (o instanceof Date) {
 
-	}
+			return TimeDuration.getInstance((Date) o).format();
 
-	if (o instanceof TimeDuration)
-	{
+		}
 
-	    return TimeDuration.getInstance ((TimeDuration) o).format ();
+		if (o instanceof TimeDuration) {
 
-	}
+			return TimeDuration.getInstance((TimeDuration) o).format();
 
-	if (o instanceof Timing)
-	{
+		}
 
-	    return TimeDuration.getInstance ((Timing) o).format ();
+		if (o instanceof Timing) {
 
-	}
+			return TimeDuration.getInstance((Timing) o).format();
 
-	throw new QueryExecutionException ("Type: " + 
-					   o.getClass ().getName () + 
-					   " not supported.");
+		}
 
-    }
-
-    public void setDefaultDateFormatSpec (String spec)
-    {
-
-	this.defSDF = new SimpleDateFormat (spec);
-
-    }
-
-    public String formatDate (Object o)
-	                      throws QueryExecutionException
-    {
-
-	if (o == null)
-	{
-
-	    throw new QueryExecutionException ("Cannot format a null date.");
+		throw new QueryExecutionException("Type: " + o.getClass().getName()
+		        + " not supported.");
 
 	}
 
-	Date d = null;
+	public void setDefaultDateFormatSpec(String spec) {
 
-	if (o instanceof Date)
-	{
-
-	    d = (Date) o;
+		this.defSDF = new SimpleDateFormat(spec);
 
 	}
 
-	if (o instanceof Number)
-	{
+	public String formatDate(Object o) throws QueryExecutionException {
 
-	    d = new Date (((Number) o).longValue ());
+		if (o == null) {
 
-	}
+			throw new QueryExecutionException("Cannot format a null date.");
 
-	// If this is a string try and parse the string first, basically convert
-	// from one format to another.
-	if (o instanceof String)
-	{
+		}
 
-	    d = ((ConversionFunctions) this.q.getFunctionHandler (ConversionFunctions.HANDLER_ID)).toDate ((String) o);
+		Date d = null;
 
-	}
+		if (o instanceof Date) {
 
-	if (d == null)
-	{
+			d = (Date) o;
 
-	    throw new QueryExecutionException ("Type: " + 
-					       o.getClass ().getName () + 
-					       " not supported.");
+		}
 
-	}
+		if (o instanceof Number) {
 
-	return this.defSDF.format (d);
+			d = new Date(((Number) o).longValue());
 
-    }
+		}
 
-    public String formatDateTime (Object o)
-	                          throws QueryExecutionException
-    {
+		// If this is a string try and parse the string first, basically convert
+		// from one format to another.
+		if (o instanceof String) {
 
-	if (o == null)
-	{
+			d = ((ConversionFunctions) this.q
+			        .getFunctionHandler(ConversionFunctions.HANDLER_ID))
+			        .toDate((String) o);
 
-	    throw new QueryExecutionException ("Cannot format a null date.");
+		}
 
-	}
+		if (d == null) {
 
-	Date d = null;
+			throw new QueryExecutionException("Type: " + o.getClass().getName()
+			        + " not supported.");
 
-	if (o instanceof Date)
-	{
+		}
 
-	    d = (Date) o;
+		return this.defSDF.format(d);
 
 	}
 
-	if (o instanceof Number)
-	{
+	public String formatDateTime(Object o) throws QueryExecutionException {
 
-	    d = new Date (((Number) o).longValue ());
+		if (o == null) {
 
-	}
+			throw new QueryExecutionException("Cannot format a null date.");
 
-	// If this is a string try and parse the string first, basically convert
-	// from one format to another.
-	if (o instanceof String)
-	{
+		}
 
-	    d = ((ConversionFunctions) this.q.getFunctionHandler (ConversionFunctions.HANDLER_ID)).toDate ((String) o);
+		Date d = null;
 
-	}
+		if (o instanceof Date) {
 
-	if (d == null)
-	{
+			d = (Date) o;
 
-	    throw new QueryExecutionException ("Type: " + 
-					       o.getClass ().getName () + 
-					       " not supported.");
+		}
 
-	}
+		if (o instanceof Number) {
 
-	return this.defSDTF.format (d);
+			d = new Date(((Number) o).longValue());
 
-    }
+		}
 
-    public String formatDate (Query  q,
-			      Object o,
-                              Getter g,
-   			      String spec,
-			      String saveValueName)
-	                      throws QueryExecutionException
-    {
+		// If this is a string try and parse the string first, basically convert
+		// from one format to another.
+		if (o instanceof String) {
 
-	if (g != null)
-	{
+			d = ((ConversionFunctions) this.q
+			        .getFunctionHandler(ConversionFunctions.HANDLER_ID))
+			        .toDate((String) o);
 
-	    try
-	    {
+		}
 
-		o = g.getValue (o);
+		if (d == null) {
 
-	    } catch (Exception e) {
+			throw new QueryExecutionException("Type: " + o.getClass().getName()
+			        + " not supported.");
 
-		throw new QueryExecutionException ("Unable to get value from accessor: " + 
-						   g,
-						   e);
+		}
 
-	    }
+		return this.defSDTF.format(d);
 
 	}
 
-	if (o == null)
-	{
+	public String formatDate(Query q, Object o, Getter g, String spec,
+	        String saveValueName) throws QueryExecutionException {
 
-	    return null + "";
+		if (g != null) {
 
-	}
+			try {
 
-	Date d = null;
+				o = g.getValue(o);
 
-	if (o instanceof Date)
-	{
+			} catch (Exception e) {
 
-	    d = (Date) o;
+				throw new QueryExecutionException(
+				        "Unable to get value from accessor: " + g, e);
 
-	}
+			}
 
-	if (o instanceof Long)
-	{
+		}
 
-	    d = new Date (((Long) o).longValue ());
+		if (o == null) {
 
-	}
+			return null + "";
 
-	Object so = null;
+		}
 
-	if (saveValueName != null)
-	{
+		Date d = null;
 
-	    so = q.getSaveValue (saveValueName);
+		if (o instanceof Date) {
 
-	}
+			d = (Date) o;
 
-	SimpleDateFormat df = null;
-	
-	if (so != null)
-	{
+		}
 
-	    df = (SimpleDateFormat) so;
+		if (o instanceof Long) {
 
-	} else {
-	    
-	    if (spec == null)
-	    {
+			d = new Date(((Long) o).longValue());
 
-		spec = FormattingFunctions.DEFAULT_DATE_FORMAT_SPEC;
+		}
 
-	    }
+		Object so = null;
 
-	    df = new SimpleDateFormat (spec);
-	    
-	}
+		if (saveValueName != null) {
 
-	return df.format (d);
+			so = q.getSaveValue(saveValueName);
 
-    }
+		}
 
-    public String formatNumber (Object n)
-	                        throws QueryExecutionException
-    {
+		SimpleDateFormat df = null;
 
-	return this.formatNumber (this.q,
-				  n,
-				  null,
-				  null);
+		if (so != null) {
 
-    }
+			df = (SimpleDateFormat) so;
 
-    public String formatNumber (Query  q,
-				Object o,
-				String spec,
-				String saveValueName)
-	                        throws QueryExecutionException
-    {
+		} else {
 
-	if (!(o instanceof Number))
-	{
+			if (spec == null) {
 
-	    if (o == null)
-	    {
+				spec = FormattingFunctions.DEFAULT_DATE_FORMAT_SPEC;
 
-		return "NaN (null)";
+			}
 
-	    }
+			df = new SimpleDateFormat(spec);
 
-	    return "NaN (" + o.getClass ().getName () + ")";
+		}
+
+		return df.format(d);
 
 	}
 
-	if (o == null)
-	{
+	public String formatNumber(Object n) throws QueryExecutionException {
 
-	    return "0";
-
-	}
-
-	Object so = null;
-
-	if (saveValueName != null)
-	{
-
-	    so = q.getSaveValue (saveValueName);
+		return this.formatNumber(this.q, n, null, null);
 
 	}
 
-	Number n = (Number) o;
+	public String formatNumber(Query q, Object o, String spec,
+	        String saveValueName) throws QueryExecutionException {
 
-	DecimalFormat df = null;
-	
-	if (so != null)
-	{
+		if (!(o instanceof Number)) {
 
-	    if (!(so instanceof DecimalFormat))
-	    {
+			if (o == null) {
 
-		throw new QueryExecutionException ("Expected save value: \"" + 
-						   saveValueName +
-						   "\" object to be of type: " +
-						   DecimalFormat.class.getName () + 
-						   ", is: " + 
-						   so.getClass ().getName ());
+				return "NaN (null)";
 
-	    }
+			}
 
-	    df = (DecimalFormat) so;
+			return "NaN (" + o.getClass().getName() + ")";
 
-	} else {
-	    
-	    if (spec == null)
-	    {
+		}
 
-		spec = FormattingFunctions.DEFAULT_DECIMAL_FORMAT_SPEC;
+		if (o == null) {
 
-	    }
+			return "0";
 
-	    df = new DecimalFormat (spec);
-	    
+		}
+
+		Object so = null;
+
+		if (saveValueName != null) {
+
+			so = q.getSaveValue(saveValueName);
+
+		}
+
+		Number n = (Number) o;
+
+		DecimalFormat df = null;
+
+		if (so != null) {
+
+			if (!(so instanceof DecimalFormat)) {
+
+				throw new QueryExecutionException("Expected save value: \""
+				        + saveValueName + "\" object to be of type: "
+				        + DecimalFormat.class.getName() + ", is: "
+				        + so.getClass().getName());
+
+			}
+
+			df = (DecimalFormat) so;
+
+		} else {
+
+			if (spec == null) {
+
+				spec = FormattingFunctions.DEFAULT_DECIMAL_FORMAT_SPEC;
+
+			}
+
+			df = new DecimalFormat(spec);
+
+		}
+
+		return df.format(n.doubleValue());
+
 	}
 
-	return df.format (n.doubleValue ());
+	public String formatNumber(Query q, Object o, Getter g, String spec,
+	        String saveValueName) throws QueryExecutionException {
 
-    }
+		try {
 
-    public String formatNumber (Query  q,
-				Object o,
-				Getter g,
-				String spec,
-			        String saveValueName)
-	                        throws QueryExecutionException
-    {
+			o = g.getValue(o);
 
-	try
-	{
+		} catch (Exception e) {
 
-	    o = g.getValue (o);
+			throw new QueryExecutionException(
+			        "Unable to get value from accessor: " + g, e);
 
-	} catch (Exception e) {
+		}
 
-	    throw new QueryExecutionException ("Unable to get value from accessor: " + 
-					       g,
-					       e);
+		return this.formatNumber(q, o, spec, saveValueName);
 
 	}
-
-	return this.formatNumber (q,
-				  o,
-				  spec,
-				  saveValueName);
-	
-    }
 
 }

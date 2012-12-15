@@ -23,61 +23,52 @@ import javax.activation.DataSource;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class URLDataSource implements DataSource
-{
+public class URLDataSource implements DataSource {
 
-    private URL url = null;         
-    private String contentType = "text/plain";
+	private URL url = null;
+	private String contentType = "text/plain";
 
-    public URLDataSource (URL url) 
-    {
+	public URLDataSource(URL url) {
 
-	this.url = url;
-    
-    }
-
-    public InputStream getInputStream () 
-                                       throws IOException 
-    {
-
-	if (this.url == null) 
-	{
-
-	    throw new IOException ("No URL provided");
+		this.url = url;
 
 	}
-	
-	URLConnection urlC = url.openConnection ();
-	urlC.setDoInput (true);
-	
-	urlC.connect ();
-	this.contentType = urlC.getContentType ();
 
-	// Get the input stream...
-	return new BufferedInputStream (urlC.getInputStream ());
-    
-    }
+	public InputStream getInputStream() throws IOException {
 
-    public OutputStream getOutputStream () 
-                                         throws IOException 
-    {
+		if (this.url == null) {
 
-	throw new IOException ("Output not supported");
+			throw new IOException("No URL provided");
 
-    }
+		}
 
-    public String getContentType() 
-    {
+		URLConnection urlC = url.openConnection();
+		urlC.setDoInput(true);
 
-	return this.contentType;
-        
-    }
-    
-    public String getName() 
-    {
-    
-        return "URL DataSource for sending only";
-        
-    }
+		urlC.connect();
+		this.contentType = urlC.getContentType();
+
+		// Get the input stream...
+		return new BufferedInputStream(urlC.getInputStream());
+
+	}
+
+	public OutputStream getOutputStream() throws IOException {
+
+		throw new IOException("Output not supported");
+
+	}
+
+	public String getContentType() {
+
+		return this.contentType;
+
+	}
+
+	public String getName() {
+
+		return "URL DataSource for sending only";
+
+	}
 
 }

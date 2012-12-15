@@ -10,11 +10,13 @@ import org.josql.Query;
 import org.josql.QueryExecutionException;
 import org.josql.QueryParseException;
 import org.josql.QueryResults;
+
 /**
- * a simple test to find bottleneck compare with SimpleNativeTest
- * to run the test,must use jvm options:<b>-server -Xms512m -Xmx512m -verbose:gc</b>
+ * a simple test to find bottleneck compare with SimpleNativeTest to run the
+ * test,must use jvm options:<b>-server -Xms512m -Xmx512m -verbose:gc</b>
+ * 
  * @author nihongye
- *
+ * 
  */
 public class SimpleQueryTest extends AbstractPerformanceTest {
 	private Random random = new Random(System.currentTimeMillis());
@@ -22,11 +24,11 @@ public class SimpleQueryTest extends AbstractPerformanceTest {
 
 	@SuppressWarnings("unchecked")
 	protected long executeQuery() throws QueryParseException,
-			QueryExecutionException {
+	        QueryExecutionException {
 		// Create a new Query.
 		Query q = new Query();
 		String sql = "select * from net.sf.josql.pf.support.Foo "
-				+ "	where name = 'someone'" + "	and age > 10";
+		        + "	where name = 'someone'" + "	and age > 10";
 		// Parse the SQL you are going to use.
 		q.parse(sql);
 		// Execute the query.

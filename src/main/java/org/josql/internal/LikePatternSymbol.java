@@ -14,50 +14,44 @@
  */
 package org.josql.internal;
 
-public class LikePatternSymbol 
-{
-    
-    public static final int SYMBOL_F = 0;
-    public static final int SYMBOL_E = 1;
-    public static final int SYMBOL_A = 2;
-    public static final int SYMBOL_N = 3;       
-    
-    public String part = null;
-    public int code = -1;
-            
-    public static LikePatternSymbol getSymbol (int code)
-    {
-        
-        return new LikePatternSymbol (code);
-        
-    }
+public class LikePatternSymbol {
 
-    public static LikePatternSymbol getSymbol (String part)
-    {
-        
-        return new LikePatternSymbol (part);
-        
-    }
-            
-    public LikePatternSymbol (int code)
-    {
-        
-        this.code = code;
-        
-    }
+	public static final int SYMBOL_F = 0;
+	public static final int SYMBOL_E = 1;
+	public static final int SYMBOL_A = 2;
+	public static final int SYMBOL_N = 3;
 
-    public LikePatternSymbol (String part)
-    {
-        
-        this.part = part;
-        
-    }
-    
-    public boolean hashCode (Object o)
-    {
-        
-        return ((LikePatternSymbol) o).code == this.code;
-        
-    }
-    
+	public String part = null;
+	public int code = -1;
+
+	public static LikePatternSymbol getSymbol(int code) {
+
+		return new LikePatternSymbol(code);
+
+	}
+
+	public static LikePatternSymbol getSymbol(String part) {
+
+		return new LikePatternSymbol(part);
+
+	}
+
+	public LikePatternSymbol(int code) {
+
+		this.code = code;
+
+	}
+
+	public LikePatternSymbol(String part) {
+
+		this.part = part;
+
+	}
+
+	public boolean hashCode(Object o) {
+
+		return ((LikePatternSymbol) o).code == this.code;
+
+	}
+
 }

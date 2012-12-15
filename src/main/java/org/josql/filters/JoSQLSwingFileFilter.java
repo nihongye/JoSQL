@@ -23,110 +23,112 @@ import org.josql.QueryParseException;
 
 /**
  * A {@link FileFilter} that uses a JoSQL statement to provide the filtering.
- * The value returned by the {@link #accept(File)} method is determined by executing the
- * WHERE clause of a JoSQL statement on each File passed in.  This just uses an instance of:
- * {@link JoSQLFileFilter} to do it's job, see that class for details of usage.
- */  
-public class JoSQLSwingFileFilter extends FileFilter
-{
+ * The value returned by the {@link #accept(File)} method is determined by
+ * executing the WHERE clause of a JoSQL statement on each File passed in. This
+ * just uses an instance of: {@link JoSQLFileFilter} to do it's job, see that
+ * class for details of usage.
+ */
+public class JoSQLSwingFileFilter extends FileFilter {
 
-    // Like I'm gonna re-invent the wheel!
-    private JoSQLFileFilter ff = null;
+	// Like I'm gonna re-invent the wheel!
+	private JoSQLFileFilter ff = null;
 
-    private String d = null;
+	private String d = null;
 
-    /**
-     * Init this file filter with the query.
-     * 
-     * @param q The query.
-     * @throws QueryParseException If there is an issue with the parsing of the query, 
-     *                             or if the FROM class is not {@link File}.
-     */
-    public JoSQLSwingFileFilter (String q)
-	                         throws QueryParseException
-    {
+	/**
+	 * Init this file filter with the query.
+	 * 
+	 * @param q
+	 *            The query.
+	 * @throws QueryParseException
+	 *             If there is an issue with the parsing of the query, or if the
+	 *             FROM class is not {@link File}.
+	 */
+	public JoSQLSwingFileFilter(String q) throws QueryParseException {
 
-	this.ff = new JoSQLFileFilter (q);
+		this.ff = new JoSQLFileFilter(q);
 
-    }
+	}
 
-    /**
-     * Init this file filter with the query already built and parsed.
-     * 
-     * @param q The query.
-     * @throws IllegalStateException If the Query object has not been parsed.
-     * @throws QueryParseException If the FROM class is not {@link File}.
-     */
-    public JoSQLSwingFileFilter (Query  q)
-	                         throws IllegalStateException,
-	                                QueryParseException
-    {
+	/**
+	 * Init this file filter with the query already built and parsed.
+	 * 
+	 * @param q
+	 *            The query.
+	 * @throws IllegalStateException
+	 *             If the Query object has not been parsed.
+	 * @throws QueryParseException
+	 *             If the FROM class is not {@link File}.
+	 */
+	public JoSQLSwingFileFilter(Query q) throws IllegalStateException,
+	        QueryParseException {
 
-	this.ff = new JoSQLFileFilter (q);
+		this.ff = new JoSQLFileFilter(q);
 
-    }
+	}
 
-    /**
-     * Set the JoSQLFileFilter that should be used to handle the {@link #accept(File)} method.
-     *
-     * @param ff The file filter.
-     */
-    public void setJoSQLFileFilter (JoSQLFileFilter ff)
-    {
+	/**
+	 * Set the JoSQLFileFilter that should be used to handle the
+	 * {@link #accept(File)} method.
+	 * 
+	 * @param ff
+	 *            The file filter.
+	 */
+	public void setJoSQLFileFilter(JoSQLFileFilter ff) {
 
-	this.ff = ff;
+		this.ff = ff;
 
-    }
+	}
 
-    /**
-     * Set the description that should be used.
-     *
-     * @param d The description.
-     */
-    public void setDescription (String d)
-    {
+	/**
+	 * Set the description that should be used.
+	 * 
+	 * @param d
+	 *            The description.
+	 */
+	public void setDescription(String d) {
 
-	this.d = d;
+		this.d = d;
 
-    }
+	}
 
-    /**
-     * Return the description for the filter.
-     *
-     * @return The description.
-     */
-    public String getDescription ()
-    {
+	/**
+	 * Return the description for the filter.
+	 * 
+	 * @return The description.
+	 */
+	public String getDescription() {
 
-	return this.d;
+		return this.d;
 
-    }
+	}
 
-    /**
-     * Get the file filter being used "under the hoodie" in the {@link #accept(File)} method.
-     * You should also check that file filter to see if an exception has occurred.
-     *
-     * @return The JoSQLFileFilter that is being used to perform the match.
-     */
-    public JoSQLFileFilter getJoSQLFileFilter ()
-    {
+	/**
+	 * Get the file filter being used "under the hoodie" in the
+	 * {@link #accept(File)} method. You should also check that file filter to
+	 * see if an exception has occurred.
+	 * 
+	 * @return The JoSQLFileFilter that is being used to perform the match.
+	 */
+	public JoSQLFileFilter getJoSQLFileFilter() {
 
-	return this.ff;
+		return this.ff;
 
-    }
+	}
 
-    /**
-     * Apply the WHERE clause of the statement to the {@link File} passed in.
-     * This is just a wrapper call to: {@link JoSQLFileFilter#accept(File)}.
-     *
-     * @param f The file to evaluate the WHERE on.
-     * @return <code>true</code> if the WHERE clause evaluates to <code>true</code>.
-     */
-    public boolean accept (File f)
-    {
-	
-	return this.ff.accept (f);
+	/**
+	 * Apply the WHERE clause of the statement to the {@link File} passed in.
+	 * This is just a wrapper call to: {@link JoSQLFileFilter#accept(File)}.
+	 * 
+	 * @param f
+	 *            The file to evaluate the WHERE on.
+	 * @return <code>true</code> if the WHERE clause evaluates to
+	 *         <code>true</code>.
+	 */
+	public boolean accept(File f) {
 
-    }
+		return this.ff.accept(f);
+
+	}
 
 }

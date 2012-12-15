@@ -22,137 +22,116 @@ import org.josql.QueryExecutionException;
 import java.lang.reflect.Method;
 
 /**
- * The wrapper implementation for the Java 1.4 regular expression matching (java.util.regex).
- * See: {@link java.util.regex}.
+ * The wrapper implementation for the Java 1.4 regular expression matching
+ * (java.util.regex). See: {@link java.util.regex}.
  */
-public class StandardJavaRegExpWrapper extends AbstractRegExpWrapper implements RegExp
-{
-    
-    public static final String SUPPORTED_VERSION = "1.4";
+public class StandardJavaRegExpWrapper extends AbstractRegExpWrapper implements
+        RegExp {
 
-    private final String compileMethName = "compile";
-    private final String matcherMethName = "matcher";
-    private final String matchesMethName = "matches";
-    private final String matcherClassName = "java.util.regex.Matcher";
-    private final String patternClassName = "java.util.regex.Pattern";
-    
-    private Method compileMeth = null;
-    private Method matcherMeth = null;
-    private Method matchesMeth = null;
-    
-    private Map patterns = new HashMap ();
-    
-    public StandardJavaRegExpWrapper ()
-    {
-	
-    }
+	public static final String SUPPORTED_VERSION = "1.4";
 
-    public String getSupportedVersion ()
-    {
+	private final String compileMethName = "compile";
+	private final String matcherMethName = "matcher";
+	private final String matchesMethName = "matches";
+	private final String matcherClassName = "java.util.regex.Matcher";
+	private final String patternClassName = "java.util.regex.Pattern";
 
-	return StandardJavaRegExpWrapper.SUPPORTED_VERSION;
+	private Method compileMeth = null;
+	private Method matcherMeth = null;
+	private Method matchesMeth = null;
 
-    }
+	private Map patterns = new HashMap();
 
-    public boolean isAvailable ()
-    {
-
-	try
-	{
-
-	    Class.forName (this.patternClassName);
-
-	    return true;
-
-	} catch (Exception e) {
-
-	    return false;
+	public StandardJavaRegExpWrapper() {
 
 	}
 
-    }
+	public String getSupportedVersion() {
 
-    public boolean match (String pattern,
-			  String val)
-	                  throws QueryExecutionException
-    {
-
-	try
-	{
-
-	    // See if we already have a Pattern for this pattern.
-	    Object o = this.patterns.get (pattern);
-	    
-	    if (o == null)
-	    {
-
-		Object args[] = {pattern};
-		
-		// Create a new one.  Static method.
-		o = this.compileMeth.invoke (null,
-					     args);
-		
-		this.patterns.put (pattern,
-				   o);
-		
-	    }
-	    
-	    Object args[] = {val};
-	    
-	    // Now create the matcher.
-	    Object matcher = this.matcherMeth.invoke (o,
-						      args);
-	    
-	    // Now invoke the "matches" method.
-	    return ((Boolean) this.matchesMeth.invoke (matcher,
-						       null)).booleanValue ();
-	    
-	} catch (Exception e) {
-	    
-	    throw new QueryExecutionException ("Unable to match value: " + 
-					       val + 
-					       " against pattern: " +
-					       pattern,
-					       e);
-	    
-	}
-	
-    }
-
-    public void init ()
-	              throws QueryExecutionException
-    {
-
-	try
-	{
-
-	    Class pc = Class.forName (this.patternClassName);
-	    
-	    Class argTypes[] = {String.class};
-	    
-	    // Get the "compile" method.
-	    this.compileMeth = pc.getMethod (this.compileMethName,
-					     argTypes);
-	    
-	    Class argTypes2[] = {CharSequence.class};
-	    
-	    // Get the "matcher" method.
-	    this.matcherMeth = pc.getMethod (this.matcherMethName,
-					     argTypes2);
-	    
-	    Class mc = Class.forName (this.matcherClassName);
-	    
-	    // Get the matches method.
-	    this.matchesMeth = mc.getMethod (this.matchesMethName,
-					     null);
-	    
-	} catch (Exception e) {
-	    
-	    throw new QueryExecutionException ("Unable to init",
-					       e);
+		return StandardJavaRegExpWrapper.SUPPORTED_VERSION;
 
 	}
-	
-    }
+
+	public boolean isAvailable() {
+
+		try {
+
+			Class.forName(this.patternClassName);
+
+			return true;
+
+		} catch (Exception e) {
+
+			return false;
+
+		}
+
+	}
+
+	public boolean match(String pattern, String val)
+	        throws QueryExecutionException {
+
+		try {
+
+			// See if we already have a Pattern for this pattern.
+			Object o = this.patterns.get(pattern);
+
+			if (o == null) {
+
+				Object args[] = { pattern };
+
+				// Create a new one. Static method.
+				o = this.compileMeth.invoke(null, args);
+
+				this.patterns.put(pattern, o);
+
+			}
+
+			Object args[] = { val };
+
+			// Now create the matcher.
+			Object matcher = this.matcherMeth.invoke(o, args);
+
+			// Now invoke the "matches" method.
+			return ((Boolean) this.matchesMeth.invoke(matcher, null))
+			        .booleanValue();
+
+		} catch (Exception e) {
+
+			throw new QueryExecutionException("Unable to match value: " + val
+			        + " against pattern: " + pattern, e);
+
+		}
+
+	}
+
+	public void init() throws QueryExecutionException {
+
+		try {
+
+			Class pc = Class.forName(this.patternClassName);
+
+			Class argTypes[] = { String.class };
+
+			// Get the "compile" method.
+			this.compileMeth = pc.getMethod(this.compileMethName, argTypes);
+
+			Class argTypes2[] = { CharSequence.class };
+
+			// Get the "matcher" method.
+			this.matcherMeth = pc.getMethod(this.matcherMethName, argTypes2);
+
+			Class mc = Class.forName(this.matcherClassName);
+
+			// Get the matches method.
+			this.matchesMeth = mc.getMethod(this.matchesMethName, null);
+
+		} catch (Exception e) {
+
+			throw new QueryExecutionException("Unable to init", e);
+
+		}
+
+	}
 
 }

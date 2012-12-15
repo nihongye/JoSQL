@@ -1,8 +1,7 @@
 package org.josql.events;
 
-public interface BindVariableChangedListener
-{
+public interface BindVariableChangedListener {
 
-    public void bindVariableChanged (BindVariableChangedEvent ev);
+	public void bindVariableChanged(BindVariableChangedEvent ev);
 
 }

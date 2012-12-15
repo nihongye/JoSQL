@@ -23,115 +23,99 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
 
 /**
- * The wrapper implementation for the GNU implementation of regular expression matching.
- * See: <a href="http://www.cacas.org/java/gnu/regexp/">http://www.cacas.org/java/gnu/regexp/</a> for details.
+ * The wrapper implementation for the GNU implementation of regular expression
+ * matching. See: <a
+ * href="http://www.cacas.org/java/gnu/regexp/">http://www.cacas
+ * .org/java/gnu/regexp/</a> for details.
  */
-public class GNURegExpWrapper extends AbstractRegExpWrapper implements RegExp
-{
+public class GNURegExpWrapper extends AbstractRegExpWrapper implements RegExp {
 
-    public static final String SUPPORTED_VERSION = "1.1.4";
+	public static final String SUPPORTED_VERSION = "1.1.4";
 
-    private final String reClassName = "gnu.regexp.RE";
-    private final String isMatchMethName = "isMatch";
+	private final String reClassName = "gnu.regexp.RE";
+	private final String isMatchMethName = "isMatch";
 
-    private Map patterns = new HashMap ();
-    
-    private Constructor cons = null;
-    private Method isMatchMeth = null;
+	private Map patterns = new HashMap();
 
-    public GNURegExpWrapper ()
-    {
+	private Constructor cons = null;
+	private Method isMatchMeth = null;
 
-    }
-
-    public String getSupportedVersion ()
-    {
-
-	return GNURegExpWrapper.SUPPORTED_VERSION;
-
-    }
-
-    public boolean isAvailable ()
-    {
-
-	try
-	{
-
-	    Class.forName (this.reClassName);
-
-	    return true;
-
-	} catch (Exception e) {
-
-	    return false;
+	public GNURegExpWrapper() {
 
 	}
 
-    }
+	public String getSupportedVersion() {
 
-    public boolean match (String pattern,
-			  String val)
-	                  throws QueryExecutionException
-    {
-	    
-	try
-	{
-
-	    Object o = this.patterns.get (pattern);
-	    
-	    if (o == null)
-	    {
-
-		Object args[] = {pattern};
-		
-		o = this.cons.newInstance (args);
-		
-		this.patterns.put (pattern,
-				   o);
-		
-	    }
-	    
-	    Object args[] = {val};
-	    
-	    return ((Boolean) this.isMatchMeth.invoke (o,
-						       args)).booleanValue ();
-	    
-	} catch (Exception e) {
-
-	    throw new QueryExecutionException ("Unable to match value: " + 
-					       val + 
-					       " against pattern: " + 
-					       pattern,
-					       e);
+		return GNURegExpWrapper.SUPPORTED_VERSION;
 
 	}
 
-    }
+	public boolean isAvailable() {
 
-    public void init ()
-                      throws QueryExecutionException
-    {
-	    
-	try
-	{
+		try {
 
-	    // Bit easier this one!
-	    Class reClass = Class.forName (reClassName);
-	    
-	    Class argTypes[] = {Object.class};
-	    
-	    this.cons = reClass.getConstructor (argTypes);
-	    
-	    this.isMatchMeth = reClass.getMethod (this.isMatchMethName,
-						  argTypes);
-	    
-	} catch (Exception e) {
-	    
-	    throw new QueryExecutionException ("Unable to init",
-					       e);
-	    
+			Class.forName(this.reClassName);
+
+			return true;
+
+		} catch (Exception e) {
+
+			return false;
+
+		}
+
 	}
-	
-    }
-    
+
+	public boolean match(String pattern, String val)
+	        throws QueryExecutionException {
+
+		try {
+
+			Object o = this.patterns.get(pattern);
+
+			if (o == null) {
+
+				Object args[] = { pattern };
+
+				o = this.cons.newInstance(args);
+
+				this.patterns.put(pattern, o);
+
+			}
+
+			Object args[] = { val };
+
+			return ((Boolean) this.isMatchMeth.invoke(o, args)).booleanValue();
+
+		} catch (Exception e) {
+
+			throw new QueryExecutionException("Unable to match value: " + val
+			        + " against pattern: " + pattern, e);
+
+		}
+
+	}
+
+	public void init() throws QueryExecutionException {
+
+		try {
+
+			// Bit easier this one!
+			Class reClass = Class.forName(reClassName);
+
+			Class argTypes[] = { Object.class };
+
+			this.cons = reClass.getConstructor(argTypes);
+
+			this.isMatchMeth = reClass
+			        .getMethod(this.isMatchMethName, argTypes);
+
+		} catch (Exception e) {
+
+			throw new QueryExecutionException("Unable to init", e);
+
+		}
+
+	}
+
 }

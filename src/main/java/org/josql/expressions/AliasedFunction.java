@@ -15,22 +15,20 @@
 package org.josql.expressions;
 
 /**
- * A function that also has an alias.  This generally occurs in the "EXECUTE ON" 
+ * A function that also has an alias. This generally occurs in the "EXECUTE ON"
  * clause.
  */
-public class AliasedFunction extends AliasedExpression
-{
+public class AliasedFunction extends AliasedExpression {
 
-    /**
-     * Get the function that is aliased.
-     *
-     * @return The function.
-     */
-    public Function getFunction ()
-    {
+	/**
+	 * Get the function that is aliased.
+	 * 
+	 * @return The function.
+	 */
+	public Function getFunction() {
 
-	return (Function) this.exp;
+		return (Function) this.exp;
 
-    }
+	}
 
 }

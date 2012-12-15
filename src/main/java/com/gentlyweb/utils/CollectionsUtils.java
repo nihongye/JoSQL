@@ -23,234 +23,205 @@ import java.util.Arrays;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class CollectionsUtils
-{
+public class CollectionsUtils {
 
-    /**
-     * Given a Map return the entries in the Map in the passed in
-     * List in order.
-     *
-     * @param map The Map to use.
-     * @param list The List to fill up.
-     */
-    public static void getMapEntriesAsOrderedList (Map  map,
-						   List list)
-    {
+	/**
+	 * Given a Map return the entries in the Map in the passed in List in order.
+	 * 
+	 * @param map
+	 *            The Map to use.
+	 * @param list
+	 *            The List to fill up.
+	 */
+	public static void getMapEntriesAsOrderedList(Map map, List list) {
 
-	// Get all the keys from the Map as an Array.
-	Object[] keys = map.keySet ().toArray ();
+		// Get all the keys from the Map as an Array.
+		Object[] keys = map.keySet().toArray();
 
-	// Do a natural sort.
-	Arrays.sort (keys);
+		// Do a natural sort.
+		Arrays.sort(keys);
 
-	// Cycle over them and pull out the associated value
-	// from the Map placing it into the List.
-	for (int i = 0; i < keys.length; i++)
-	{
+		// Cycle over them and pull out the associated value
+		// from the Map placing it into the List.
+		for (int i = 0; i < keys.length; i++) {
 
-	    list.add (map.get (keys[i]));
+			list.add(map.get(keys[i]));
 
-	}
-
-    }
-
-    /**
-     * Get all the entries in the Map object out and place into
-     * the List passed in, just add at the bottom.
-     *
-     * @param map The Map to get objects out of.
-     * @param list The List to add objects to the end of.  We add the
-     *             Map.Entry.
-     */
-    public static void addMapEntriesToList (Map  map,
-					    List list)
-    {
-
-	Iterator iter = map.entrySet ().iterator ();
-
-	while (iter.hasNext ())
-	{
-
-	    list.add (((Map.Entry) iter.next ()).getValue ());
+		}
 
 	}
 
-    }
+	/**
+	 * Get all the entries in the Map object out and place into the List passed
+	 * in, just add at the bottom.
+	 * 
+	 * @param map
+	 *            The Map to get objects out of.
+	 * @param list
+	 *            The List to add objects to the end of. We add the Map.Entry.
+	 */
+	public static void addMapEntriesToList(Map map, List list) {
 
-    public static List convertToRows (List objs,
-				      int  rowSize)
-    {
+		Iterator iter = map.entrySet().iterator();
 
-	List retData = new ArrayList ();
+		while (iter.hasNext()) {
 
-	if ((rowSize == 0)
-	    ||
-	    (rowSize >= objs.size ())
-	   )
-	{
+			list.add(((Map.Entry) iter.next()).getValue());
 
-	    retData.add (objs);
-
-	    return retData;
-
-	}
-
-	int count = 0;
-
-	List row = new ArrayList ();
-
-	for (int i = 0; i < objs.size (); i++)
-	{
-
-	    row.add (objs.get (i));
-
-	    count++;
-
-	    if (count == rowSize)
-	    {
-
-		// We need a new row, add this row to our return data.
-		retData.add (row);
-
-		row = new ArrayList ();
-
-		count = 0;
-
-	    }
+		}
 
 	}
 
-	while (count != rowSize)
-	{
+	public static List convertToRows(List objs, int rowSize) {
 
-	    row.add (null);
+		List retData = new ArrayList();
 
-	    count++;
+		if ((rowSize == 0) || (rowSize >= objs.size())) {
 
-	}
+			retData.add(objs);
 
-	retData.add (row);
+			return retData;
 
-	return retData;
+		}
 
-    }
+		int count = 0;
 
-    /**
-     * Given a List of objects, convert the values it contains to the passed in Map.
-     * The <b>keyAccessor</b> and <b>valueAccessor</b> parameters should
-     * be {@link Getter accessors} and specify the key and value for the
-     * map respectively.  Set <b>valueAccessor</b> to <code>null</code> to mean that
-     * the object from the List should be added as the value.  Note: all the objects
-     * in the list MUST be of the same type, to determine the class the first object
-     * in the list is examined.
-     *
-     * @param objs The objects to convert.
-     * @param map The Map to add the objects to.
-     * @param keyAccessor The accessor for the key to set in the map.
-     * @param valueAccessor The accessor for the value to set in the map, set to <code>null</code>
-     *                      to get the object added.
-     */
-    public static void convertListToMap (List   objs,
-					 Map    map,
-					 String keyAccessor,
-					 String valueAccessor)
-	                                 throws IllegalAccessException,
-	                                        InvocationTargetException,
-                                                ClassCastException
-    {
+		List row = new ArrayList();
 
-	if ((objs == null)
-            ||
-	    (map == null)
-	   )
-	{
+		for (int i = 0; i < objs.size(); i++) {
 
-	    return;
+			row.add(objs.get(i));
 
-	}
+			count++;
 
-	if (objs.size () == 0)
-	{
+			if (count == rowSize) {
 
-	    return;
+				// We need a new row, add this row to our return data.
+				retData.add(row);
+
+				row = new ArrayList();
+
+				count = 0;
+
+			}
+
+		}
+
+		while (count != rowSize) {
+
+			row.add(null);
+
+			count++;
+
+		}
+
+		retData.add(row);
+
+		return retData;
 
 	}
 
-	Class c = objs.get (0).getClass ();
+	/**
+	 * Given a List of objects, convert the values it contains to the passed in
+	 * Map. The <b>keyAccessor</b> and <b>valueAccessor</b> parameters should be
+	 * {@link Getter accessors} and specify the key and value for the map
+	 * respectively. Set <b>valueAccessor</b> to <code>null</code> to mean that
+	 * the object from the List should be added as the value. Note: all the
+	 * objects in the list MUST be of the same type, to determine the class the
+	 * first object in the list is examined.
+	 * 
+	 * @param objs
+	 *            The objects to convert.
+	 * @param map
+	 *            The Map to add the objects to.
+	 * @param keyAccessor
+	 *            The accessor for the key to set in the map.
+	 * @param valueAccessor
+	 *            The accessor for the value to set in the map, set to
+	 *            <code>null</code> to get the object added.
+	 */
+	public static void convertListToMap(List objs, Map map, String keyAccessor,
+	        String valueAccessor) throws IllegalAccessException,
+	        InvocationTargetException, ClassCastException {
 
-	Getter ka = new Getter (keyAccessor,
-				c);
-	Getter va = null;
+		if ((objs == null) || (map == null)) {
 
-	if (valueAccessor != null)
-	{
+			return;
 
-	    va = new Getter (valueAccessor,
-			     c);
+		}
 
-	}
+		if (objs.size() == 0) {
 
-	for (int i = 0; i < objs.size (); i++)
-	{
+			return;
 
-	    Object o = objs.get (i);
+		}
 
-	    Object k = ka.getValue (o);
+		Class c = objs.get(0).getClass();
 
-	    Object v = null;
+		Getter ka = new Getter(keyAccessor, c);
+		Getter va = null;
 
-	    if (va == null)
-	    {
+		if (valueAccessor != null) {
 
-		v = o;
+			va = new Getter(valueAccessor, c);
 
-	    } else {
+		}
 
-		v = va.getValue (o);
+		for (int i = 0; i < objs.size(); i++) {
 
-	    }
+			Object o = objs.get(i);
 
-	    map.put (k,
-		     v);
+			Object k = ka.getValue(o);
 
-	}
+			Object v = null;
 
-    }
+			if (va == null) {
 
-    /**
-     * Add all the entries in the List as keys in the specified map.
-     * Set "keyIsValue" to <code>true</code> to put the entry from
-     * the List as the value for the map as well, if it's set to
-     * <code>false</code> then we use "".
-     *
-     * @param list The List to get entries from.
-     * @param map The Map to add entries to.
-     * @param keyIsValue Indicate whether we should use the List entry
-     *                   as the value as well or "".
-     */
-    public static void addListEntriesToMap (List    list,
-					    Map     map,
-					    boolean keyIsValue)
-    {
+				v = o;
 
-	for (int i = 0; i < list.size (); i++)
-	{
+			} else {
 
-	    if (keyIsValue)
-	    {
+				v = va.getValue(o);
 
-		map.put (list.get (i),
-			 list.get (i));
+			}
 
-	    } else {
+			map.put(k, v);
 
-		map.put (list.get (i),
-			 "");
-
-	    }
+		}
 
 	}
 
-    }
+	/**
+	 * Add all the entries in the List as keys in the specified map. Set
+	 * "keyIsValue" to <code>true</code> to put the entry from the List as the
+	 * value for the map as well, if it's set to <code>false</code> then we use
+	 * "".
+	 * 
+	 * @param list
+	 *            The List to get entries from.
+	 * @param map
+	 *            The Map to add entries to.
+	 * @param keyIsValue
+	 *            Indicate whether we should use the List entry as the value as
+	 *            well or "".
+	 */
+	public static void addListEntriesToMap(List list, Map map,
+	        boolean keyIsValue) {
+
+		for (int i = 0; i < list.size(); i++) {
+
+			if (keyIsValue) {
+
+				map.put(list.get(i), list.get(i));
+
+			} else {
+
+				map.put(list.get(i), "");
+
+			}
+
+		}
+
+	}
 
 }

@@ -17,75 +17,65 @@ package com.gentlyweb.utils;
 
 import java.util.Date;
 
-public class Timing
-{
+public class Timing {
 
-    private long start = 0;
-    private long end = 0;
+	private long start = 0;
+	private long end = 0;
 
-    public Timing ()
-    {
+	public Timing() {
 
-	this.start = System.currentTimeMillis ();
+		this.start = System.currentTimeMillis();
 
-    }
+	}
 
-    public Timing (Date s)
-    {
+	public Timing(Date s) {
 
-	this.start = s.getTime ();
+		this.start = s.getTime();
 
-    }
+	}
 
-    public Timing (long s)
-    {
+	public Timing(long s) {
 
-	this.start = s;
+		this.start = s;
 
-    }
+	}
 
-    public TimeDuration getDuration ()
-    {
+	public TimeDuration getDuration() {
 
-	return new TimeDuration (this.end - this.start);
+		return new TimeDuration(this.end - this.start);
 
-    }
+	}
 
-    public void restart (Date d)
-    {
+	public void restart(Date d) {
 
-	this.start = d.getTime ();
-	this.end = 0;
+		this.start = d.getTime();
+		this.end = 0;
 
-    }
+	}
 
-    public void restart ()
-    {
+	public void restart() {
 
-	this.start = System.currentTimeMillis ();
-	this.end = 0;
+		this.start = System.currentTimeMillis();
+		this.end = 0;
 
-    }
+	}
 
-    public void stop (long s)
-    {
+	public void stop(long s) {
 
-	this.end = s;
+		this.end = s;
 
-    }
+	}
 
-    public void stop (Date d)
-    {
+	public void stop(Date d) {
 
-	this.end = d.getTime ();
+		this.end = d.getTime();
 
-    }
+	}
 
-    public void stop ()
-    {
+	public void stop() {
 
-	this.end = System.currentTimeMillis ();
+		this.end = System.currentTimeMillis();
 
-    }
+	}
 
 }

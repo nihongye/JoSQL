@@ -25,118 +25,106 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
- * This class is used to perform access into a Java object using a 
- * String value with a specific notation.  This class differs from the {@link Getter}
- * class in that instead of creating the chain of methods when the getter is
- * instantiated it will instead get the <b>actual</b> method from the object passed in.
+ * This class is used to perform access into a Java object using a String value
+ * with a specific notation. This class differs from the {@link Getter} class in
+ * that instead of creating the chain of methods when the getter is instantiated
+ * it will instead get the <b>actual</b> method from the object passed in.
  */
-public class DynamicGetter
-{
+public class DynamicGetter {
 
-    private List chain = new ArrayList ();
+	private List chain = new ArrayList();
 
-    private Class clazz = null;
-    private Object origObj = null;
-    private Object origObjRes = null;
-    private int cs = 0;
+	private Class clazz = null;
+	private Object origObj = null;
+	private Object origObjRes = null;
+	private int cs = 0;
 
-    /**
-     * Get the getter associated with the named reference.  Return
-     * null if there isn't one, or if we can't access it.
-     *
-     * @param ref The reference for the getter.
-     * @param obj The Object to build up the getter from.
-     */
-    public DynamicGetter (String ref,
-			  Object obj)
-	                  throws IllegalArgumentException,
-                                 IllegalAccessException,
-				 InvocationTargetException
-    {
+	/**
+	 * Get the getter associated with the named reference. Return null if there
+	 * isn't one, or if we can't access it.
+	 * 
+	 * @param ref
+	 *            The reference for the getter.
+	 * @param obj
+	 *            The Object to build up the getter from.
+	 */
+	public DynamicGetter(String ref, Object obj)
+	        throws IllegalArgumentException, IllegalAccessException,
+	        InvocationTargetException {
 
-	this.clazz = obj.getClass ();
+		this.clazz = obj.getClass();
 
-	this.origObj = obj;
+		this.origObj = obj;
 
-	StringTokenizer t = new StringTokenizer (ref,
-						 ".");
+		StringTokenizer t = new StringTokenizer(ref, ".");
 
-	Class c = obj.getClass ();
+		Class c = obj.getClass();
 
-	while (t.hasMoreTokens ())
-	{
+		while (t.hasMoreTokens()) {
 
-	    String tok = t.nextToken ();
+			String tok = t.nextToken();
 
-	    // Create a Getter for this.
-	    Getter g = new Getter (tok,
-				   c);
+			// Create a Getter for this.
+			Getter g = new Getter(tok, c);
 
-	    this.chain.add (g);
+			this.chain.add(g);
 
-	    c = g.getType ();
+			c = g.getType();
 
-	}
+		}
 
-	this.cs = this.chain.size ();
-
-    }
-
-    public Class getBaseClass ()
-    {
-
-	return this.clazz;
-
-    }
-
-    /**
-     * Get the class of the type of object we would return from the {@link #getValue(Object)}
-     * method.
-     *
-     * @return The class.
-     */
-    public Class getType ()
-    {
-
-	return ((Getter) this.chain.get (this.cs - 1)).getType ();
-
-    }
-
-    public Object getValue (Object obj)
-	                    throws IllegalAccessException,
-                                   InvocationTargetException
-    {
-	
-	// If the object is null then return null.
-	if (obj == null)
-	{
-
-	    return null;
+		this.cs = this.chain.size();
 
 	}
 
-	if (this.origObj == obj)
-	{
+	public Class getBaseClass() {
 
-	    return this.origObjRes;
+		return this.clazz;
+
+	}
+
+	/**
+	 * Get the class of the type of object we would return from the
+	 * {@link #getValue(Object)} method.
+	 * 
+	 * @return The class.
+	 */
+	public Class getType() {
+
+		return ((Getter) this.chain.get(this.cs - 1)).getType();
 
 	}
 
-	// For our accessor chain, use the Field and Methods
-	// to get the actual value.
-	Object retdata = obj;
-	
-	for (int i = 0; i < this.cs; i++)
-	{
+	public Object getValue(Object obj) throws IllegalAccessException,
+	        InvocationTargetException {
 
-	    Getter g = (Getter) this.chain.get (i);
+		// If the object is null then return null.
+		if (obj == null) {
 
-	    retdata = g.getValue (retdata);
+			return null;
+
+		}
+
+		if (this.origObj == obj) {
+
+			return this.origObjRes;
+
+		}
+
+		// For our accessor chain, use the Field and Methods
+		// to get the actual value.
+		Object retdata = obj;
+
+		for (int i = 0; i < this.cs; i++) {
+
+			Getter g = (Getter) this.chain.get(i);
+
+			retdata = g.getValue(retdata);
+
+		}
+
+		return retdata;
 
 	}
-	
-	return retdata;
-	
-    }
 
 }

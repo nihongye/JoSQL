@@ -17,17 +17,15 @@ package org.josql.functions.regexp;
 import org.josql.QueryExecutionException;
 
 /**
- * Defines a regular expression, use the {@link RegExpFactory#getDefaultInstance()} to 
- * get the "default" instance, and then just call: {@link #match(String,String)}.
+ * Defines a regular expression, use the
+ * {@link RegExpFactory#getDefaultInstance()} to get the "default" instance, and
+ * then just call: {@link #match(String,String)}.
  */
-public interface RegExp
-{
+public interface RegExp {
 
-    public boolean match (String pattern,
-			  String val)
-	                  throws QueryExecutionException;
+	public boolean match(String pattern, String val)
+	        throws QueryExecutionException;
 
-    public void init ()
-	              throws QueryExecutionException;
+	public void init() throws QueryExecutionException;
 
 }

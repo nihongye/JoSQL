@@ -123,7 +123,8 @@ public class EqualsExpression extends BinaryExpression {
 		}
 
 		// If we are here then both are NOT NULL.
-		return SimpleUtils.equals(l,r,this.ignoreCase,this.not,expectedValueType);
+		return SimpleUtils.equals(l, r, this.ignoreCase, this.not,
+		        expectedValueType);
 	}
 
 	/**

@@ -17,10 +17,8 @@ package com.gentlyweb.utils;
 
 import java.util.EventListener;
 
-public interface FileChangeListener extends EventListener
-{
+public interface FileChangeListener extends EventListener {
 
-    public void fileChanged (FileChangeEvent e,
-			     int             types);
+	public void fileChanged(FileChangeEvent e, int types);
 
 }

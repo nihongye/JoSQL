@@ -18,23 +18,18 @@ package org.josql;
  * The exception that is thrown during the <b>execution</b> part of the Query
  * execution.
  */
-public class QueryExecutionException extends Exception 
-{
+public class QueryExecutionException extends Exception {
 
-    public QueryExecutionException (String    message,
-				    Throwable cause)
-    {
+	public QueryExecutionException(String message, Throwable cause) {
 
-	super (message,
-	       cause);
+		super(message, cause);
 
-    }
+	}
 
-    public QueryExecutionException (String message)
-    {
+	public QueryExecutionException(String message) {
 
-	super (message);
+		super(message);
 
-    }
+	}
 
 }

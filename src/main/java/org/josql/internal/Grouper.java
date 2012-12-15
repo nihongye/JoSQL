@@ -24,94 +24,82 @@ import org.josql.QueryExecutionException;
 
 import org.josql.expressions.Expression;
 
-public class Grouper 
-{
+public class Grouper {
 
-    private List cols = new ArrayList ();
-    private Query q = null;
-    private int cs = -1;
+	private List cols = new ArrayList();
+	private Query q = null;
+	private int cs = -1;
 
-    public Grouper (Query q)
-    {
+	public Grouper(Query q) {
 
-	this.q = q;
-
-    }
-
-    public List getExpressions ()
-    {
-
-	return this.cols;
-
-    }
-
-    public void addExpression (Expression e) 
-    {
-
-	this.cols.add (e);
-	this.cs = cols.size ();
-
-    }
-
-    public Map group (List   objs)
-	              throws QueryExecutionException
-    {
-
-	Map retVals = new HashMap ();
-
-	int s = objs.size (); 
-
-	List l = null;
-
-	for (int j = 0; j < s; j++)
-	{
-
-	    Object o = objs.get (j);
-
-	    this.q.setCurrentObject (o);
-
-	    l = new ArrayList ();
-
-	    // Get the values...
-	    for (int i = 0; i < this.cs; i++)
-	    {
-
-		Expression exp = (Expression) this.cols.get (i);
-
-		try
-		{
-
-		    l.add (exp.getValue (o,
-					 this.q));
-
-		} catch (Exception e) {
-
-		    throw new QueryExecutionException ("Unable to get group by value for expression: " +
-						       exp,
-						       e);
-
-		}
-
-	    }
-
-	    List v = (List) retVals.get (l);
-
-	    if (v == null)
-	    {
-
-		v = new ArrayList ();
-
-		retVals.put (l,
-			     v);
-
-	    }
-
-	    v.add (o);
+		this.q = q;
 
 	}
 
-	return retVals;
+	public List getExpressions() {
 
-    }
+		return this.cols;
+
+	}
+
+	public void addExpression(Expression e) {
+
+		this.cols.add(e);
+		this.cs = cols.size();
+
+	}
+
+	public Map group(List objs) throws QueryExecutionException {
+
+		Map retVals = new HashMap();
+
+		int s = objs.size();
+
+		List l = null;
+
+		for (int j = 0; j < s; j++) {
+
+			Object o = objs.get(j);
+
+			this.q.setCurrentObject(o);
+
+			l = new ArrayList();
+
+			// Get the values...
+			for (int i = 0; i < this.cs; i++) {
+
+				Expression exp = (Expression) this.cols.get(i);
+
+				try {
+
+					l.add(exp.getValue(o, this.q));
+
+				} catch (Exception e) {
+
+					throw new QueryExecutionException(
+					        "Unable to get group by value for expression: "
+					                + exp, e);
+
+				}
+
+			}
+
+			List v = (List) retVals.get(l);
+
+			if (v == null) {
+
+				v = new ArrayList();
+
+				retVals.put(l, v);
+
+			}
+
+			v.add(o);
+
+		}
+
+		return retVals;
+
+	}
 
 }

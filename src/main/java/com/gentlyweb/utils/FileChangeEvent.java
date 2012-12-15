@@ -18,79 +18,69 @@ package com.gentlyweb.utils;
 import java.io.File;
 import java.util.EventObject;
 
-public class FileChangeEvent extends EventObject
-{
+public class FileChangeEvent extends EventObject {
 
-    public static final int EXISTS = 1;
-    public static final int NOT_EXISTS = 2;
-    public static final int MODIFIED = 4;
-    public static final int HIDDEN = 8;
-    public static final int NOT_HIDDEN = 16;
-    public static final int LENGTH_CHANGED = 32;
-    public static final int READABLE = 64;
-    public static final int NOT_READABLE = 128;
-    public static final int WRITEABLE = 256;
-    public static final int NOT_WRITEABLE = 512;
-    public static final int FILE_TYPE_CHANGE = 1024;
+	public static final int EXISTS = 1;
+	public static final int NOT_EXISTS = 2;
+	public static final int MODIFIED = 4;
+	public static final int HIDDEN = 8;
+	public static final int NOT_HIDDEN = 16;
+	public static final int LENGTH_CHANGED = 32;
+	public static final int READABLE = 64;
+	public static final int NOT_READABLE = 128;
+	public static final int WRITEABLE = 256;
+	public static final int NOT_WRITEABLE = 512;
+	public static final int FILE_TYPE_CHANGE = 1024;
 
-    private FileDetails newD = null;
-    private FileDetails oldD = null;
-    private int types = -1;
+	private FileDetails newD = null;
+	private FileDetails oldD = null;
+	private int types = -1;
 
-    public FileChangeEvent (File        file,
-			    FileDetails newDetails,
-			    FileDetails oldDetails,
-			    int         eventTypes)
-    {
+	public FileChangeEvent(File file, FileDetails newDetails,
+	        FileDetails oldDetails, int eventTypes) {
 
-	super (file);
+		super(file);
 
-	this.newD = newDetails;
-	this.oldD = oldDetails;
-	this.types = eventTypes;
-
-    }
-    
-    public boolean hasEvent (int type)
-    {
-
-	if ((this.types & type) > 0)
-	{
-
-	    return true;
+		this.newD = newDetails;
+		this.oldD = oldDetails;
+		this.types = eventTypes;
 
 	}
 
-	return false;
+	public boolean hasEvent(int type) {
 
-    }
+		if ((this.types & type) > 0) {
 
-    public int getEventTypes ()
-    {
+			return true;
 
-	return this.types;
+		}
 
-    }
+		return false;
 
-    public FileDetails getOldFileDetails ()
-    {
+	}
 
-	return this.oldD;
+	public int getEventTypes() {
 
-    }
+		return this.types;
 
-    public FileDetails getNewFileDetails ()
-    {
+	}
 
-	return this.newD;
+	public FileDetails getOldFileDetails() {
 
-    }
+		return this.oldD;
 
-    public File getFile ()
-    {
+	}
 
-	return (File) this.getSource ();
+	public FileDetails getNewFileDetails() {
 
-    }
+		return this.newD;
+
+	}
+
+	public File getFile() {
+
+		return (File) this.getSource();
+
+	}
 
 }

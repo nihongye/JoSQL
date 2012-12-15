@@ -14,139 +14,145 @@
  */
 package org.josql.expressions;
 
+import java.util.Collection;
+
 import org.josql.Query;
 import org.josql.QueryExecutionException;
 import org.josql.QueryParseException;
+import org.josql.internal.SimpleUtils;
 
 /**
  * Super-class of Expressions that return a binary result.
  * <p>
- * A binary expression must always have a LHS.  The RHS is optional.
+ * A binary expression must always have a LHS. The RHS is optional.
  */
-public abstract class BinaryExpression extends Expression
-{
+public abstract class BinaryExpression extends Expression {
 
-    protected Expression left = null;
-    protected Expression right = null;
+	protected Expression left = null;
+	protected Expression right = null;
+	protected int expectedValueType = SimpleUtils.EXPECTED_SPECIAL;
 
-    /**
-     * Return whether this expression, and more specifically the left and right parts of
-     * the expression return a fixed result.
-     * Sub-classes may override this method for more tailored results, especially if the
-     * binary expression does not demand a RHS.
-     *
-     * @param q The Query object.
-     * @return <code>true<code> if the expression has a fixed result.
-     */
-    public boolean hasFixedResult (Query q)
-    {
+	/**
+	 * Return whether this expression, and more specifically the left and right
+	 * parts of the expression return a fixed result. Sub-classes may override
+	 * this method for more tailored results, especially if the binary
+	 * expression does not demand a RHS.
+	 * 
+	 * @param q
+	 *            The Query object.
+	 * @return <code>true<code> if the expression has a fixed result.
+	 */
+	public boolean hasFixedResult(Query q) {
 
-	boolean fr = true;
+		boolean fr = true;
 
-	if (this.right != null)
-	{
+		if (this.right != null) {
 
-	    fr = this.right.hasFixedResult (q);
+			fr = this.right.hasFixedResult(q);
 
-	}
+		}
 
-	return this.left.hasFixedResult (q) && fr;
-
-    }
-
-    /**
-     * Return the expected return type from this expression.
-     * 
-     * @param q The Query object.
-     * @return The class of the return type, this method ALWAYS returns <code>Boolean.class</code>.
-     */
-    public Class getExpectedReturnType (Query  q)
-    {
-
-	return Boolean.class;
-
-    }
-
-    /**
-     * Init the expression.  Sub-classes will often override this method.
-     * This method just calls: {@link Expression#init(Query)} on the LHS and RHS (if present) of the
-     * expression.  
-     * 
-     * @param q The Query object.
-     * @throws QueryParseException If the LHS and/or RHS cannot be inited.
-     */
-    public void init (Query  q)
-	              throws QueryParseException
-    {
-
-	this.left.init (q);
-
-	// There isn't always a RHS, for example IN expressions.
-	if (this.right != null)
-	{
-
-	    this.right.init (q);
+		return this.left.hasFixedResult(q) && fr;
 
 	}
 
-    }
+	/**
+	 * Return the expected return type from this expression.
+	 * 
+	 * @param q
+	 *            The Query object.
+	 * @return The class of the return type, this method ALWAYS returns
+	 *         <code>Boolean.class</code>.
+	 */
+	public Class getExpectedReturnType(Query q) {
 
-    /**
-     * Get the value of this expression.  This will always return an instance of: 
-     * <code>java.lang.Boolean</code> created as the result of a call to:
-     * {@link Expression#getValue(Object,Query)}.
-     *
-     * @param o The object to evaluate the expression on.
-     * @param q The Query object.
-     * @return An instance of Boolean.
-     * @throws QueryExecutionException If the expression cannot be evaluated.
-     */
-    public Object getValue (Object o,
-			    Query  q)
-	                    throws QueryExecutionException
-    {
+		return Boolean.class;
 
-	return Boolean.valueOf (this.isTrue (o,
-					     q));
+	}
 
-    }
+	/**
+	 * Init the expression. Sub-classes will often override this method. This
+	 * method just calls: {@link Expression#init(Query)} on the LHS and RHS (if
+	 * present) of the expression.
+	 * 
+	 * @param q
+	 *            The Query object.
+	 * @throws QueryParseException
+	 *             If the LHS and/or RHS cannot be inited.
+	 */
+	public void init(Query q) throws QueryParseException {
 
-    /**
-     * Get the RHS.
-     *
-     * @return The RHS of the expression.
-     */
-    public Expression getRight ()
-    {
+		this.left.init(q);
 
-	return this.right;
+		// There isn't always a RHS, for example IN expressions.
+		if (this.right != null) {
 
-    }
+			this.right.init(q);
 
-    /**
-     * Get the LHS.
-     *
-     * @return The LHS of the expression.
-     */
-    public Expression getLeft ()
-    {
+		}
+		//init expectedValueType
+		if(Object.class.equals(this.left.getExpectedReturnType(q))
+				|| Object.class.equals(this.right.getExpectedReturnType(q))){
+			expectedValueType = SimpleUtils.EXPECTED_OBJECT;
+		}else if(Collection.class.isAssignableFrom(this.left.getExpectedReturnType(q))
+				|| Collection.class.isAssignableFrom(this.right.getExpectedReturnType(q))){
+			expectedValueType = SimpleUtils.EXPECTED_COLLECTION;
+		}else {
+			expectedValueType = SimpleUtils.EXPECTED_SPECIAL;
+		}
+	}
 
-	return this.left;
+	/**
+	 * Get the value of this expression. This will always return an instance of:
+	 * <code>java.lang.Boolean</code> created as the result of a call to:
+	 * {@link Expression#getValue(Object,Query)}.
+	 * 
+	 * @param o
+	 *            The object to evaluate the expression on.
+	 * @param q
+	 *            The Query object.
+	 * @return An instance of Boolean.
+	 * @throws QueryExecutionException
+	 *             If the expression cannot be evaluated.
+	 */
+	public Object getValue(Object o, Query q) throws QueryExecutionException {
 
-    }
+		return Boolean.valueOf(this.isTrue(o, q));
 
-    public void setLeft (Expression exp)
-    {
+	}
 
-	this.left = exp;
+	/**
+	 * Get the RHS.
+	 * 
+	 * @return The RHS of the expression.
+	 */
+	public Expression getRight() {
 
-    }
+		return this.right;
 
-    public void setRight (Expression exp)
-    {
+	}
 
-	this.right = exp;
+	/**
+	 * Get the LHS.
+	 * 
+	 * @return The LHS of the expression.
+	 */
+	public Expression getLeft() {
 
-    }
+		return this.left;
+
+	}
+
+	public void setLeft(Expression exp) {
+
+		this.left = exp;
+
+	}
+
+	public void setRight(Expression exp) {
+
+		this.right = exp;
+
+	}
 
 }

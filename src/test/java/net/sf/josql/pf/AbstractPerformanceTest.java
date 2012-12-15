@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.josql.QueryExecutionException;
-import org.josql.QueryParseException;
 /**
  * the performance test framework
  * invoke excuteQuery {@link #loop},after invoke,calculate the query avg execute time(exclude max and min)

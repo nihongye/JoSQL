@@ -30,23 +30,24 @@ public class PartialSortTest extends TestCase{
 	}
 	
 	public void testTopLeast(){
-		int count = 10000;
-		Integer[] array = createIntegers(count,10000);
+		int count = 100000;
+		Integer[] array = createIntegers(count,100);
 		PartialSort<Integer> partialSort = PartialSort.from(comparator);
 		int k = 1000;
-		partialSort.sort(array, k);
-		verifyLeastResult(array,k);
+		Integer[] tops = partialSort.sort(array, k).toArray(new Integer[0]);
+		verifyLeastResult(tops,array,k);
 	}
 	
 	public void testTopLeastPerformance(){
-		int count = 100 * 10000;
-		Integer[] array = createIntegers(count,1000 * 10000);
+		int count = 500 * 10000;
+		Integer[] array = createIntegers(count,5);
 		PartialSort<Integer> partialSort = PartialSort.from(comparator);
-		int k = 1000;
+		int k = 100;
 		long begin = System.currentTimeMillis();
-		partialSort.sort(array, k);
+		List<Integer> sort = partialSort.sort(array, k);
 		long end  = System.currentTimeMillis();
 		System.out.println("pay "+(end - begin)+" millis to sort top 1000 of array which contain "+count+" element");
+//		System.out.println(array.size());
 	}
 
 	
@@ -55,8 +56,8 @@ public class PartialSortTest extends TestCase{
 		Integer[] array = createIntegers(count,10000);
 		PartialSort<Integer> partialSort = PartialSort.from(comparator,true);
 		int k = 300;
-		partialSort.sort(array, k);
-		verifyGreatestResult(array,k);
+		Integer[] tops = partialSort.sort(array, k).toArray(new Integer[0]);
+		verifyGreatestResult(tops,array,k);
 	}
 	
 	public void testFallbackToFullSort(){
@@ -64,8 +65,8 @@ public class PartialSortTest extends TestCase{
 		Integer[] array = createIntegers(count,100000);
 		PartialSort<Integer> partialSort = PartialSort.from(comparator);
 		int k = 10000 / 2 + 1;
-		partialSort.sort(array, k);
-		verifyLeastResult(array,k);
+		Integer[] tops = partialSort.sort(array, k).toArray(new Integer[0]);
+		verifyLeastResult(tops,array,k);
 	}
 	
 	public void testFallbackToFullSortDesc(){
@@ -73,8 +74,8 @@ public class PartialSortTest extends TestCase{
 		Integer[] array = createIntegers(count,100000);
 		PartialSort<Integer> partialSort = PartialSort.from(comparator,true);
 		int k = 10000 / 2 + 1;
-		partialSort.sort(array, k);
-		verifyGreatestResult(array,k);
+		Integer[] tops = partialSort.sort(array, k).toArray(new Integer[0]);
+		verifyGreatestResult(tops,array,k);
 	}
 	
 	public void testGetTopN(){
@@ -82,8 +83,8 @@ public class PartialSortTest extends TestCase{
 		Integer[] array = createIntegers(count,100000);
 		PartialSort<Integer> partialSort = PartialSort.from(comparator,true);
 		int k = 200;
-		List<Integer> list = partialSort.getTopN(Arrays.asList(array), k);
-		verifyGreatestResult((Integer[])list.toArray(new Integer[0]),k);
+		Integer[] tops = partialSort.sort(array, k).toArray(new Integer[0]);
+		verifyGreatestResult(tops,array,k);
 	}
 	
 	public void testKBigThanArray(){
@@ -91,31 +92,27 @@ public class PartialSortTest extends TestCase{
 		Integer[] array = createIntegers(count,100000);
 		PartialSort<Integer> partialSort = PartialSort.from(comparator);
 		int k = 300;
-		partialSort.sort(array, k);
-		verifyLeastResult(array,k);
+		Integer[] tops = partialSort.sort(array, k).toArray(new Integer[0]);
+		verifyLeastResult(tops,array,k);
 	}
 	
 	
 	
 	
-	private void verifyGreatestResult(Integer[] list,int k) {
-	    Integer[] tops = new Integer[k];
-	    System.arraycopy(list, 0, tops, 0, k);
+	private void verifyGreatestResult(Integer[] tops,Integer[] array,int k) {
 	    //sort the list
-	    Arrays.sort(list,Collections.reverseOrder());
-	    for(int i = 0;i < k;i++){
-	    	assertEquals(list[i], tops[i]);
+	    Arrays.sort(array,Collections.reverseOrder());
+	    for(int i = 0;i < tops.length && i < k;i++){
+	    	assertEquals(array[i], tops[i]);
 	    }
     }
 
 
-	private void verifyLeastResult(Integer[] list,int k) {
-		Integer[] tops = new Integer[k > list.length ? list.length : k];
-	    System.arraycopy(list, 0, tops, 0, tops.length);
-	    //sort the list
-	    Arrays.sort(list);
-	    for(int i = 0;i < tops.length;i++){
-	    	assertEquals(list[i], tops[i]);
+	private void verifyLeastResult(Integer[] tops,Integer[] array, int k) {
+		//sort the list
+	    Arrays.sort(array);
+	    for(int i = 0;i < tops.length && i < k;i++){
+	    	assertEquals(array[i], tops[i]);
 	    }
     }
 

@@ -30,6 +30,7 @@ import java.util.LinkedHashSet;
 import java.util.Collection;
 
 import org.josql.parser.JoSQLParser;
+import org.josql.utils.PartialSort;
 
 import org.josql.expressions.*;
 
@@ -1116,16 +1117,22 @@ public class Query {
 
 	}
 
-	private void evalOrderByClause() throws QueryExecutionException {
+	@SuppressWarnings("unchecked")
+    private void evalOrderByClause() throws QueryExecutionException {
 
 		if ((this.qd.results.size() > 1) && (this.orderByComp != null)) {
 
 			long s = System.currentTimeMillis();
-
+			
 			// It should be noted here that the comparator will set the
 			// "current object" so that it can be used in the order by
 			// clause.
-			Collections.sort(this.qd.results, this.orderByComp);
+			if(this.limit != null){
+				int rowsCount = ((Number) limit.getRowsCount().evaluate(null, this)).intValue();
+				PartialSort.from(this.orderByComp).getTopN(this.qd.results,rowsCount);
+			}else{
+				Collections.sort(this.qd.results, this.orderByComp);
+			}
 
 			this.addTiming("Total time to order results",
 			        System.currentTimeMillis() - s);

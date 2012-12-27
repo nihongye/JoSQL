@@ -181,4 +181,14 @@ public class Limit {
 
 	}
 
+	public ValueExpression getStart() {
+    	return start;
+    }
+
+	public ValueExpression getRowsCount() {
+    	return rowsCount;
+    }
+
+	
+	
 }

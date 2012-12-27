@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class AbstractPerformanceTest {
 
 	protected List<Long> queryExecuteTimes = new ArrayList<Long>();
-	private long loop = 12;
+	protected long loop = 12;
 
 	public List<Long> getTimes() {
 		return queryExecuteTimes;
@@ -50,4 +50,9 @@ public abstract class AbstractPerformanceTest {
 	 */
 	protected abstract long executeQuery() throws Exception;
 
+	public void setLoop(long loop) {
+    	this.loop = loop;
+    }
+
+	
 }

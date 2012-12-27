@@ -1,6 +1,7 @@
 package net.sf.josql.pf.order;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -32,8 +33,8 @@ public class OrderAndLimitTest extends AbstractPerformanceTest {
 		Query q = new Query();
 		q.addFunctionHandler(new FooFunction());
 		String sql = "select * from net.sf.josql.pf.support.Foo "
-		        + "	where name = 'someone'"
-		        + "	and age > 10" 
+		        + "	where name like 'someone%'"
+		        + "	and age > 1" 
 		        + " order by age asc" 
 		        + " limit 1,100";
 		// Parse the SQL you are going to use.
@@ -43,6 +44,7 @@ public class OrderAndLimitTest extends AbstractPerformanceTest {
 		QueryResults qr = q.execute(users);
 		// Get the query results.
 		List<Foo> res = qr.getResults();
+		System.out.println(Arrays.toString(res.toArray()));
 		long end = System.currentTimeMillis();
 		queryExecuteTimes.add(end - begin);
 		return res.size();
@@ -56,7 +58,7 @@ public class OrderAndLimitTest extends AbstractPerformanceTest {
 	protected void initObjects() {
 		users = new ArrayList<Foo>();
 		for (int i = 0; i < 100 * 10000; i++) {
-			users.add(new Foo("someone", random.nextInt(100)));
+			users.add(new Foo("someone"+i, random.nextInt(100)));
 		}
 	}
 

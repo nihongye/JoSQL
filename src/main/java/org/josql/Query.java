@@ -1129,7 +1129,7 @@ public class Query {
 			// clause.
 			if(this.limit != null){
 				int rowsCount = ((Number) limit.getRowsCount().evaluate(null, this)).intValue();
-				PartialSort.from(this.orderByComp).getTopN(this.qd.results,rowsCount);
+				this.qd.results = PartialSort.from(this.orderByComp).getTopN(this.qd.results,rowsCount);
 			}else{
 				Collections.sort(this.qd.results, this.orderByComp);
 			}
